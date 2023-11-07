@@ -128,6 +128,9 @@ class Board {
             const field = fields[0];
             const link = `images/${field}.png`;
             const figure = new Figure(link);
+            // Here we bind inside of the openBlock function to refer to the Board instead of the function
+            // This means that a method from Board will be called inside of a Block object, and the Block will
+            // Have access to the Board object
             const block = new BlockElement("block", 100, 100, figure, this.openBlock.bind(this));
             blocksArray.push(block);
             if (addedFields[field] == 1) {
