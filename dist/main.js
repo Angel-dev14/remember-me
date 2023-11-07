@@ -57,6 +57,7 @@ class BlockElement {
         this.onClick = onClick;
         this.div = this.createBlock();
         const ref = this;
+        // here we bind this inside the click function to be the block object instead of the function
         this.div.addEventListener('click', this.click.bind(ref));
     }
     createBlock() {
@@ -69,6 +70,8 @@ class BlockElement {
     getDivElementRef() {
         return this.div;
     }
+    // Here we pass this to the onClick function, this will refer to the block element as it was bound in the constructor
+    // The onClick function is passed when the object is created inside Board in createBlocksArray
     click() {
         this.onClick && this.onClick(this);
     }
@@ -106,8 +109,8 @@ class Board {
             }
         }
     }
+    // TODO This is where the logic for detecting matches, triggering resets and using timeouts is
     openBlock(block) {
-        debugger;
         if (this.openedBlocks.length === this.limit) {
             this.openedBlocks.forEach((b) => b.reset());
             this.openedBlocks = [];
@@ -116,6 +119,8 @@ class Board {
         block.open();
         this.openedBlocks.push(block);
     }
+    // the block creating logic was moved into a separate method instead of being in the constructor
+    // It is still called the same way as before inside of the constructor
     createBlockArray() {
         let blocksArray = [];
         const addedFields = {};
@@ -133,7 +138,7 @@ class Board {
                 addedFields[field] = 1;
             }
         }
-        return blocksArray;
+        return this.shuffleBlocks(blocksArray);
     }
     shuffleBlocks(blocksArray) {
         let currentIndex = blocksArray.length, randomIndex;
