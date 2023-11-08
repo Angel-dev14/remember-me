@@ -58,7 +58,7 @@ class BlockElement {
         this.div = this.createBlock();
         const ref = this;
         // here we bind this inside the click function to be the block object instead of the function
-        this.div.addEventListener('click', this.click.bind(ref));
+        this.div.addEventListener("click", this.click.bind(ref));
     }
     createBlock() {
         const divElement = ImprovedElementCreator.createElement(ElementType.DIV);
@@ -69,6 +69,9 @@ class BlockElement {
     }
     getDivElementRef() {
         return this.div;
+    }
+    getFigureRef() {
+        return this.figure.getImgElementRef();
     }
     // Here we pass this to the onClick function, this will refer to the block element as it was bound in the constructor
     // The onClick function is passed when the object is created inside Board in createBlocksArray
@@ -86,8 +89,8 @@ class Figure {
     constructor(link) {
         this.img = ImprovedElementCreator.createElement(ElementType.IMG);
         this.img.src = link;
-        this.img.style.width = 'inherit';
-        this.img.style.height = 'inherit';
+        this.img.style.width = "inherit";
+        this.img.style.height = "inherit";
     }
     getImgElementRef() {
         return this.img;
@@ -111,13 +114,41 @@ class Board {
     }
     // TODO This is where the logic for detecting matches, triggering resets and using timeouts is
     openBlock(block) {
+        if (!this.openedBlocks.includes(block) &&
+            !(this.openedBlocks.length === this.limit)) {
+            block.open();
+            this.openedBlocks.push(block);
+        }
         if (this.openedBlocks.length === this.limit) {
+            setTimeout(() => {
+                this.pairOpen();
+            }, 2000);
+        }
+    }
+    pairOpen() {
+        const firstBlock = this.openedBlocks[0];
+        const secondBlock = this.openedBlocks[1];
+        const blocksMatch = firstBlock.getFigureRef().src === secondBlock.getFigureRef().src;
+        console.log(blocksMatch);
+        if (blocksMatch) {
+            console.log("Match found");
+            this.resetPair(blocksMatch);
+        }
+        else {
+            console.log("No match found");
+            this.resetPair(blocksMatch);
+        }
+        return;
+    }
+    resetPair(blocksMatch) {
+        if (blocksMatch) {
+            // I will need to remove the event listeners here
+            this.openedBlocks = [];
+        }
+        else {
             this.openedBlocks.forEach((b) => b.reset());
             this.openedBlocks = [];
-            return;
         }
-        block.open();
-        this.openedBlocks.push(block);
     }
     // the block creating logic was moved into a separate method instead of being in the constructor
     // It is still called the same way as before inside of the constructor
@@ -141,7 +172,8 @@ class Board {
                 addedFields[field] = 1;
             }
         }
-        return this.shuffleBlocks(blocksArray);
+        return blocksArray;
+        //return this.shuffleBlocks(blocksArray);
     }
     shuffleBlocks(blocksArray) {
         let currentIndex = blocksArray.length, randomIndex;

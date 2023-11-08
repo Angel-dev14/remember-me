@@ -48,21 +48,16 @@ class Animation {
 
 enum ElementType {
   DIV = "div",
-  IMG = "img"
+  IMG = "img",
 }
 
 class ImprovedElementCreator {
-
-  static createElement(
-      elementType: ElementType
-  ) {
+  static createElement(elementType: ElementType) {
     return document.createElement(elementType);
   }
-
 }
 
 class BlockElement {
-
   private readonly name: string;
   private readonly width: number;
   private readonly height: number;
@@ -71,11 +66,11 @@ class BlockElement {
   private readonly onClick?: (block: BlockElement) => void;
 
   constructor(
-      name: string,
-      width: number,
-      height: number,
-      figure: Figure,
-      onClick: (block: BlockElement) => void
+    name: string,
+    width: number,
+    height: number,
+    figure: Figure,
+    onClick: (block: BlockElement) => void
   ) {
     this.name = name;
     this.width = width;
@@ -85,12 +80,13 @@ class BlockElement {
     this.div = this.createBlock();
     const ref = this;
     // here we bind this inside the click function to be the block object instead of the function
-    this.div.addEventListener('click', this.click.bind(ref));
+    this.div.addEventListener("click", this.click.bind(ref));
   }
 
   private createBlock(): HTMLDivElement {
-    const divElement =
-        ImprovedElementCreator.createElement(ElementType.DIV) as HTMLDivElement;
+    const divElement = ImprovedElementCreator.createElement(
+      ElementType.DIV
+    ) as HTMLDivElement;
     divElement.style.width = `${this.width}px`;
     divElement.style.height = `${this.width}px`;
     divElement.classList.add("block");
@@ -99,6 +95,10 @@ class BlockElement {
 
   getDivElementRef() {
     return this.div;
+  }
+
+  getFigureRef() {
+    return this.figure.getImgElementRef();
   }
   // Here we pass this to the onClick function, this will refer to the block element as it was bound in the constructor
   // The onClick function is passed when the object is created inside Board in createBlocksArray
@@ -113,23 +113,23 @@ class BlockElement {
   reset() {
     this.div.removeChild(this.figure.getImgElementRef());
   }
-
 }
 
 class Figure {
   private readonly img: HTMLImageElement;
 
   constructor(link: string) {
-    this.img = ImprovedElementCreator.createElement(ElementType.IMG) as HTMLImageElement;
+    this.img = ImprovedElementCreator.createElement(
+      ElementType.IMG
+    ) as HTMLImageElement;
     this.img.src = link;
-    this.img.style.width = 'inherit';
-    this.img.style.height = 'inherit';
+    this.img.style.width = "inherit";
+    this.img.style.height = "inherit";
   }
 
   getImgElementRef() {
     return this.img;
   }
-
 }
 
 class Board {
@@ -157,16 +157,47 @@ class Board {
     }
   }
 
-
   // TODO This is where the logic for detecting matches, triggering resets and using timeouts is
   openBlock(block: BlockElement) {
+    if (
+      !this.openedBlocks.includes(block) &&
+      !(this.openedBlocks.length === this.limit)
+    ) {
+      block.open();
+      this.openedBlocks.push(block);
+    }
+
     if (this.openedBlocks.length === this.limit) {
+      setTimeout(() => {
+        this.pairOpen();
+      }, 2000);
+    }
+  }
+
+  pairOpen() {
+    const firstBlock = this.openedBlocks[0];
+    const secondBlock = this.openedBlocks[1];
+    const blocksMatch =
+      firstBlock.getFigureRef().src === secondBlock.getFigureRef().src;
+    console.log(blocksMatch);
+    if (blocksMatch) {
+      console.log("Match found");
+      this.resetPair(blocksMatch);
+    } else {
+      console.log("No match found");
+      this.resetPair(blocksMatch);
+    }
+    return;
+  }
+
+  resetPair(blocksMatch: boolean) {
+    if (blocksMatch) {
+      // I will need to remove the event listeners here
+      this.openedBlocks = [];
+    } else {
       this.openedBlocks.forEach((b) => b.reset());
       this.openedBlocks = [];
-      return;
     }
-    block.open();
-    this.openedBlocks.push(block);
   }
 
   // the block creating logic was moved into a separate method instead of being in the constructor
@@ -176,13 +207,18 @@ class Board {
     const addedFields: { [key: string]: number } = {};
     for (let i = 0; i < this.boardSize; i++) {
       const field = fields[0];
-      const link = `images/${field}.png`
+      const link = `images/${field}.png`;
       const figure = new Figure(link);
       // Here we bind inside of the openBlock function to refer to the Board instead of the function
       // This means that a method from Board will be called inside of a Block object, and the Block will
       // Have access to the Board object
-      const block =
-          new BlockElement("block", 100, 100, figure, this.openBlock.bind(this));
+      const block = new BlockElement(
+        "block",
+        100,
+        100,
+        figure,
+        this.openBlock.bind(this)
+      );
       blocksArray.push(block);
       if (addedFields[field] == 1) {
         addedFields[field] = addedFields[field] + 1;
@@ -191,12 +227,13 @@ class Board {
         addedFields[field] = 1;
       }
     }
-    return this.shuffleBlocks(blocksArray);
+    return blocksArray;
+    //return this.shuffleBlocks(blocksArray);
   }
 
   shuffleBlocks(blocksArray: BlockElement[]) {
     let currentIndex = blocksArray.length,
-        randomIndex;
+      randomIndex;
     while (currentIndex !== 0) {
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex--;
