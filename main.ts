@@ -149,6 +149,7 @@ class Board {
   private boardSize: number;
   private size: number;
   private matchedPairs: number = 0;
+  private pairTimerRunning: boolean = false;
 
   constructor(size: number) {
     this.size = size;
@@ -169,9 +170,11 @@ class Board {
 
   // TODO This is where the logic for detecting matches, triggering resets and using timeouts is
   openBlock(block: BlockElement) {
-    if (
+    if (this.pairTimerRunning) {
+      return;
+    } else if (
       !this.openedBlocks.includes(block) &&
-      !(this.openedBlocks.length === this.limit)
+      !(this.openedBlocks.length >= this.limit)
     ) {
       block.open();
       this.openedBlocks.push(block);
@@ -185,12 +188,13 @@ class Board {
   pairOpen() {
     const firstBlock = this.openedBlocks[0];
     const secondBlock = this.openedBlocks[1];
-
     const blocksMatch =
       firstBlock.getFigureRef().src === secondBlock.getFigureRef().src;
 
+    this.pairTimerRunning = true;
     setTimeout(() => {
       this.resetPair(blocksMatch);
+      this.pairTimerRunning = false;
     }, 2000);
   }
 
