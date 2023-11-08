@@ -36,8 +36,17 @@ var ElementType;
     ElementType["IMG"] = "img";
 })(ElementType || (ElementType = {}));
 class ImprovedElementCreator {
-    static createElement(elementType) {
-        return document.createElement(elementType);
+    static createElement(elementType, classes) {
+        const element = document.createElement(elementType);
+        if (classes) {
+            if (typeof classes === "string") {
+                element.classList.add(classes);
+            }
+            else {
+                element.classList.add(...classes);
+            }
+        }
+        return element;
     }
 }
 class BlockElement {
@@ -189,8 +198,7 @@ class Board {
     }
     draw() {
         for (let i = 0; i < this.blocks.length; i++) {
-            const row = document.createElement("div");
-            row.classList.add("row");
+            const row = ImprovedElementCreator.createElement(ElementType.DIV, "row");
             for (let j = 0; j < this.blocks.length; j++) {
                 const block = this.blocks[i][j].getDivElementRef();
                 row === null || row === void 0 ? void 0 : row.appendChild(block);

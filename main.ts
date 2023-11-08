@@ -49,8 +49,18 @@ enum ElementType {
 }
 
 class ImprovedElementCreator {
-  static createElement(elementType: ElementType) {
-    return document.createElement(elementType);
+  static createElement(elementType: ElementType, classes?: string | string[]) {
+    const element = document.createElement(elementType);
+
+    if (classes) {
+      if (typeof classes === "string") {
+        element.classList.add(classes);
+      } else {
+        element.classList.add(...classes);
+      }
+    }
+
+    return element;
   }
 }
 
@@ -259,8 +269,7 @@ class Board {
 
   draw() {
     for (let i = 0; i < this.blocks.length; i++) {
-      const row = document.createElement("div");
-      row.classList.add("row");
+      const row = ImprovedElementCreator.createElement(ElementType.DIV, "row") ;
       for (let j = 0; j < this.blocks.length; j++) {
         const block = this.blocks[i][j].getDivElementRef();
         row?.appendChild(block);
