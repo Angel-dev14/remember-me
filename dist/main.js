@@ -80,7 +80,13 @@ class BlockElement {
         this.onClick && this.onClick(this);
     }
     open() {
-        this.div.appendChild(this.figure.getImgElementRef());
+        const animationEndCallback = () => {
+            this.div.appendChild(this.figure.getImgElementRef());
+            this.div.classList.remove("flip");
+            this.div.removeEventListener("animationend", animationEndCallback);
+        };
+        this.div.classList.add("flip");
+        this.div.addEventListener("animationend", animationEndCallback);
     }
     reset(match) {
         if (match) {
@@ -126,22 +132,16 @@ class Board {
             this.openedBlocks.push(block);
         }
         if (this.openedBlocks.length === this.limit) {
-            setTimeout(() => {
-                this.pairOpen();
-            }, 2000);
+            this.pairOpen();
         }
     }
     pairOpen() {
         const firstBlock = this.openedBlocks[0];
         const secondBlock = this.openedBlocks[1];
         const blocksMatch = firstBlock.getFigureRef().src === secondBlock.getFigureRef().src;
-        if (blocksMatch) {
+        setTimeout(() => {
             this.resetPair(blocksMatch);
-        }
-        else {
-            this.resetPair(blocksMatch);
-        }
-        return;
+        }, 2000);
     }
     resetPair(blocksMatch) {
         this.openedBlocks.forEach((b) => b.reset(blocksMatch));

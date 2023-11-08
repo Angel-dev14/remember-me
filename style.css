@@ -41,6 +41,13 @@
   background-color: black;
 }
 
+.block img {
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none; /* Standard syntax */
+}
+
 @keyframes flip {
   0% {
     transform: rotateY(0deg);
