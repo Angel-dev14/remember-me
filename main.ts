@@ -1,48 +1,44 @@
 import { fields } from "./possibleImages.js";
-class Animation {
-  private gameoverMessage: HTMLHeadingElement;
 
-  constructor(h2Element: HTMLHeadingElement) {
-    this.gameoverMessage = h2Element;
+abstract class AbstractAnimation {
+  protected headingElementRef: HTMLElement;
+
+  constructor(headingElementRef: HTMLElement) {
+    this.headingElementRef = headingElementRef;
   }
-  showConfetti() {
-    // Number of pieces of confetti to throw
-    const confettiCount = 200;
-    // Array to store the confetti
-    const confettiArray: HTMLElement[] = [];
 
-    // Create the confetti pieces and add them to the array
-    for (let i = 0; i < confettiCount; i++) {
-      const confetti = document.createElement("div");
+  abstract start(): void;
+  abstract stop(): void;
+}
+class ConfettiAnimation extends AbstractAnimation {
+  private confettiArray: HTMLElement[] = [];
+  private confettiCount = 200;
+
+  constructor(headingElementRef: HTMLElement) {
+    super(headingElementRef);
+  }
+
+  start() {
+    for (let i = 0; i < this.confettiCount; i++) {
+      const confetti = ImprovedElementCreator.createElement(
+        ElementType.DIV
+      ) as HTMLDivElement;
       confetti.classList.add("confetti");
       confetti.textContent = "🎉";
       confetti.style.left = `${Math.random() * 100}vw`;
       confetti.style.animationDuration = `${Math.random() * 2 + 3}s`;
-      confettiArray.push(confetti);
+      this.confettiArray.push(confetti);
+      document.body.appendChild(confetti);
+      this.headingElementRef.textContent = "You Won";
     }
+  }
 
-    // Function to start the confetti animation
-    const startConfetti = () => {
-      if (this.gameoverMessage) {
-        this.gameoverMessage.textContent = "You Won!";
-      }
-      confettiArray.forEach((confetti) => {
-        document.body.appendChild(confetti);
-      });
-    };
-
-    // Function to stop the confetti animation
-    const stopConfetti = () => {
-      confettiArray.forEach((confetti) => {
-        confetti.remove();
-      });
-    };
-
-    // Start the confetti animation
-    startConfetti();
-
-    // Stop the confetti animation after 5 seconds
-    setTimeout(stopConfetti, 5000);
+  stop() {
+    this.headingElementRef.textContent = "";
+    this.confettiArray.forEach((confetti) => {
+      confetti.remove();
+    });
+    this.confettiArray = [];
   }
 }
 
@@ -152,6 +148,7 @@ class Board {
   private openedBlocks: BlockElement[];
   private boardSize: number;
   private size: number;
+  private matchedPairs: number = 0;
 
   constructor(size: number) {
     this.size = size;
@@ -200,6 +197,21 @@ class Board {
   resetPair(blocksMatch: boolean) {
     this.openedBlocks.forEach((b) => b.reset(blocksMatch));
     this.openedBlocks = [];
+    if (blocksMatch) {
+      this.matchedPairs++;
+      if (this.matchedPairs === this.boardSize / 2) {
+        this.gameOver();
+      }
+    }
+  }
+
+  gameOver() {
+    const gameOverHeadingRef = document.getElementById("gameoverMessage");
+    const confettiAnimation = new ConfettiAnimation(
+      gameOverHeadingRef as HTMLHeadingElement
+    );
+    confettiAnimation.start();
+    setTimeout(() => confettiAnimation.stop(), 5000);
   }
 
   // the block creating logic was moved into a separate method instead of being in the constructor
