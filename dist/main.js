@@ -58,7 +58,8 @@ class BlockElement {
         this.div = this.createBlock();
         const ref = this;
         // here we bind this inside the click function to be the block object instead of the function
-        this.div.addEventListener("click", this.click.bind(ref));
+        this.clickHandler = this.click.bind(this);
+        this.div.addEventListener("click", this.clickHandler);
     }
     createBlock() {
         const divElement = ImprovedElementCreator.createElement(ElementType.DIV);
@@ -81,8 +82,13 @@ class BlockElement {
     open() {
         this.div.appendChild(this.figure.getImgElementRef());
     }
-    reset() {
-        this.div.removeChild(this.figure.getImgElementRef());
+    reset(match) {
+        if (match) {
+            this.div.removeEventListener("click", this.clickHandler);
+        }
+        else {
+            this.div.removeChild(this.figure.getImgElementRef());
+        }
     }
 }
 class Figure {
@@ -129,26 +135,17 @@ class Board {
         const firstBlock = this.openedBlocks[0];
         const secondBlock = this.openedBlocks[1];
         const blocksMatch = firstBlock.getFigureRef().src === secondBlock.getFigureRef().src;
-        console.log(blocksMatch);
         if (blocksMatch) {
-            console.log("Match found");
             this.resetPair(blocksMatch);
         }
         else {
-            console.log("No match found");
             this.resetPair(blocksMatch);
         }
         return;
     }
     resetPair(blocksMatch) {
-        if (blocksMatch) {
-            // I will need to remove the event listeners here
-            this.openedBlocks = [];
-        }
-        else {
-            this.openedBlocks.forEach((b) => b.reset());
-            this.openedBlocks = [];
-        }
+        this.openedBlocks.forEach((b) => b.reset(blocksMatch));
+        this.openedBlocks = [];
     }
     // the block creating logic was moved into a separate method instead of being in the constructor
     // It is still called the same way as before inside of the constructor

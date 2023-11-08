@@ -64,6 +64,7 @@ class BlockElement {
   private readonly figure: Figure;
   private readonly div: HTMLDivElement;
   private readonly onClick?: (block: BlockElement) => void;
+  private readonly clickHandler: (event: Event) => void;
 
   constructor(
     name: string,
@@ -80,7 +81,9 @@ class BlockElement {
     this.div = this.createBlock();
     const ref = this;
     // here we bind this inside the click function to be the block object instead of the function
-    this.div.addEventListener("click", this.click.bind(ref));
+    this.clickHandler = this.click.bind(this);
+
+    this.div.addEventListener("click", this.clickHandler);
   }
 
   private createBlock(): HTMLDivElement {
@@ -110,8 +113,12 @@ class BlockElement {
     this.div.appendChild(this.figure.getImgElementRef());
   }
 
-  reset() {
-    this.div.removeChild(this.figure.getImgElementRef());
+  reset(match: Boolean) {
+    if (match) {
+      this.div.removeEventListener("click", this.clickHandler);
+    } else {
+      this.div.removeChild(this.figure.getImgElementRef());
+    }
   }
 }
 
@@ -179,25 +186,17 @@ class Board {
     const secondBlock = this.openedBlocks[1];
     const blocksMatch =
       firstBlock.getFigureRef().src === secondBlock.getFigureRef().src;
-    console.log(blocksMatch);
     if (blocksMatch) {
-      console.log("Match found");
       this.resetPair(blocksMatch);
     } else {
-      console.log("No match found");
       this.resetPair(blocksMatch);
     }
     return;
   }
 
   resetPair(blocksMatch: boolean) {
-    if (blocksMatch) {
-      // I will need to remove the event listeners here
-      this.openedBlocks = [];
-    } else {
-      this.openedBlocks.forEach((b) => b.reset());
-      this.openedBlocks = [];
-    }
+    this.openedBlocks.forEach((b) => b.reset(blocksMatch));
+    this.openedBlocks = [];
   }
 
   // the block creating logic was moved into a separate method instead of being in the constructor
