@@ -49,7 +49,6 @@ class BlockElement {
         this.onClick = onClick;
         this.div = this.createBlock();
         const ref = this;
-        // here we bind this inside the click function to be the block object instead of the function
         this.clickHandler = this.click.bind(this);
         this.div.addEventListener("click", this.clickHandler);
     }
@@ -66,8 +65,6 @@ class BlockElement {
     getFigureRef() {
         return this.figure.getImgElementRef();
     }
-    // Here we pass this to the onClick function, this will refer to the block element as it was bound in the constructor
-    // The onClick function is passed when the object is created inside Board in createBlocksArray
     click() {
         this.onClick && this.onClick(this);
     }
@@ -118,7 +115,6 @@ class Board {
             }
         }
     }
-    // TODO This is where the logic for detecting matches, triggering resets and using timeouts is
     openBlock(block) {
         if (this.pairTimerRunning) {
             return;
@@ -158,8 +154,6 @@ class Board {
         confettiAnimation.start();
         setTimeout(() => confettiAnimation.stop(), 5000);
     }
-    // the block creating logic was moved into a separate method instead of being in the constructor
-    // It is still called the same way as before inside of the constructor
     createBlockArray() {
         let blocksArray = [];
         const addedFields = {};
@@ -167,9 +161,6 @@ class Board {
             const field = fields[0];
             const link = `images/${field}.png`;
             const figure = new Figure(link);
-            // Here we bind inside of the openBlock function to refer to the Board instead of the function
-            // This means that a method from Board will be called inside of a Block object, and the Block will
-            // Have access to the Board object
             const block = new BlockElement("block", 100, 100, figure, this.openBlock.bind(this));
             blocksArray.push(block);
             if (addedFields[field] == 1) {
@@ -181,6 +172,7 @@ class Board {
             }
         }
         return blocksArray;
+        // Uncomment this to return shuffled blocks instead
         //return this.shuffleBlocks(blocksArray);
     }
     shuffleBlocks(blocksArray) {
