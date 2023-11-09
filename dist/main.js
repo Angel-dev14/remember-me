@@ -109,20 +109,20 @@ class Figure {
     }
 }
 class Board {
-    constructor(size) {
+    constructor(settings) {
         this.matchedPairs = 0;
         this.pairTimerRunning = false;
-        this.size = size;
-        this.boardSize = size * size;
+        this.size = settings.size;
+        this.boardSize = settings.size * settings.size;
         this.container = document.querySelector(".container");
         this.limit = 2;
         this.openedBlocks = [];
         this.blocks = [];
         const blocksArray = this.createBlockArray();
-        for (let i = 0; i < size; i++) {
+        for (let i = 0; i < settings.size; i++) {
             this.blocks[i] = [];
-            for (let j = 0; j < size; j++) {
-                this.blocks[i][j] = blocksArray[i * size + j];
+            for (let j = 0; j < settings.size; j++) {
+                this.blocks[i][j] = blocksArray[i * settings.size + j];
             }
         }
     }
@@ -223,6 +223,6 @@ const DifficultySettings = {
 };
 const urlParams = new URLSearchParams(window.location.search);
 const gameMode = urlParams.get('gameMode');
-const gameBoard = new Board(DifficultySettings[gameMode].size);
+const gameBoard = new Board(DifficultySettings[gameMode]);
 gameBoard.draw();
 //# sourceMappingURL=main.js.map

@@ -1,5 +1,12 @@
 import { fields } from "./possibleImages.js";
 
+type BoardSettings = {
+  timer: number;
+  timeoutSpeed: number;
+  size: number;
+};
+
+
 abstract class Animation {
   protected elementRef: HTMLElement;
 
@@ -160,19 +167,19 @@ class Board {
   private matchedPairs: number = 0;
   private pairTimerRunning: boolean = false;
 
-  constructor(size: number) {
-    this.size = size;
-    this.boardSize = size * size;
+  constructor(settings: BoardSettings) {
+    this.size = settings.size;
+    this.boardSize = settings.size * settings.size;
     this.container = document.querySelector(".container")!!;
     this.limit = 2;
     this.openedBlocks = [];
     this.blocks = [];
 
     const blocksArray = this.createBlockArray();
-    for (let i = 0; i < size; i++) {
+    for (let i = 0; i < settings.size; i++) {
       this.blocks[i] = [];
-      for (let j = 0; j < size; j++) {
-        this.blocks[i][j] = blocksArray[i * size + j];
+      for (let j = 0; j < settings.size; j++) {
+        this.blocks[i][j] = blocksArray[i * settings.size + j];
       }
     }
   }
@@ -292,5 +299,5 @@ const DifficultySettings: { [key in Difficulties]: { timer: number; timeoutSpeed
 
 const urlParams = new URLSearchParams(window.location.search);
 const gameMode = urlParams.get('gameMode') as Difficulties;
-const gameBoard = new Board(DifficultySettings[gameMode].size);
+const gameBoard = new Board(DifficultySettings[gameMode]);
 gameBoard.draw();
