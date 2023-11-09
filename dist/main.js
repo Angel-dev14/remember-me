@@ -210,7 +210,19 @@ class Board {
         }
     }
 }
-const size = Number(localStorage.getItem('size'));
-const gameBoard = new Board(size);
+var Difficulties;
+(function (Difficulties) {
+    Difficulties["EASY"] = "EASY";
+    Difficulties["MEDIUM"] = "MEDIUM";
+    Difficulties["HARD"] = "HARD";
+})(Difficulties || (Difficulties = {}));
+const DifficultySettings = {
+    [Difficulties.EASY]: { timer: 10, timeoutSpeed: 5, size: 2 },
+    [Difficulties.MEDIUM]: { timer: 20, timeoutSpeed: 10, size: 4 },
+    [Difficulties.HARD]: { timer: 30, timeoutSpeed: 15, size: 6 },
+};
+const urlParams = new URLSearchParams(window.location.search);
+const gameMode = urlParams.get('gameMode');
+const gameBoard = new Board(DifficultySettings[gameMode].size);
 gameBoard.draw();
 //# sourceMappingURL=main.js.map

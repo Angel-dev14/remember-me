@@ -42,8 +42,7 @@ class EasyMode extends GameMode {
     }
     addListener() {
         this.button.addEventListener("click", () => {
-            localStorage.setItem("size", String(2));
-            window.location.href = 'game.html';
+            window.location.href = `game.html?gameMode=${this.difficulty}`;
         });
     }
 }
@@ -53,8 +52,7 @@ class MediumMode extends GameMode {
     }
     addListener() {
         this.button.addEventListener("click", () => {
-            localStorage.setItem("size", String(4));
-            window.location.href = 'game.html';
+            window.location.href = `game.html?gameMode=${this.difficulty}`;
             //     query navigate
         });
     }
@@ -65,7 +63,7 @@ class HardMode extends GameMode {
     }
     addListener() {
         this.button.addEventListener("click", () => {
-            console.log('cliick hard');
+            window.location.href = `game.html?gameMode=${this.difficulty}`;
         });
     }
 }
