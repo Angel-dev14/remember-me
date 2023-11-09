@@ -4,6 +4,10 @@
   box-sizing: content-box;
 }
 
+body {
+  font-family: "Sedgwick Ave Display", cursive;
+}
+
 .header {
   text-align: center;
   display: flex;
@@ -64,7 +68,6 @@
 
 .flip {
   animation: flip 0.5s linear;
-  transform-style: preserve-3d;
 }
 
 .confetti {
@@ -87,4 +90,56 @@
   text-align: center;
   font-family: "Sedgwick Ave Display", cursive;
   font-size: 4em;
+}
+
+.start-game {
+  position: relative;
+  top: 2.5em;
+  width: 80%;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 3em;
+}
+
+.desc-text {
+  font-size: 1.5em;
+}
+
+.options {
+  margin-top: 2em;
+}
+
+.option {
+  width: 100%;
+  text-transform: uppercase;
+  padding: 1em 0;
+  text-align: center;
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 0.5em 0;
+  box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0, rgba(60, 64, 67, 0.15) 0 1px 3px 1px;
+}
+
+.option:hover {
+  transform: scale(1.02);
+  cursor: pointer;
+}
+
+.easy {
+  /*background: linear-gradient(rgba(0,0,139, 0.6), rgba(0,0,139, 0.40));*/
+  background-color: rgba(0,0,139, 0.5);
+  color: white;
+}
+
+.medium {
+  background-color: rgba(0,0,139, 0.75);
+  color: white;
+}
+
+.hard {
+  background-color: rgba(0,0,139,1);
+  color: white;
 }

@@ -1,10 +1,10 @@
 import { fields } from "./possibleImages.js";
-class AbstractAnimation {
-    constructor(headingElementRef) {
-        this.headingElementRef = headingElementRef;
+class Animation {
+    constructor(elementRef) {
+        this.elementRef = elementRef;
     }
 }
-class ConfettiAnimation extends AbstractAnimation {
+class ConfettiAnimation extends Animation {
     constructor(headingElementRef) {
         super(headingElementRef);
         this.confettiArray = [];
@@ -19,11 +19,11 @@ class ConfettiAnimation extends AbstractAnimation {
             confetti.style.animationDuration = `${Math.random() * 2 + 3}s`;
             this.confettiArray.push(confetti);
             document.body.appendChild(confetti);
-            this.headingElementRef.textContent = "You Won";
+            this.elementRef.textContent = "You Won";
         }
     }
     stop() {
-        this.headingElementRef.textContent = "";
+        this.elementRef.textContent = "";
         this.confettiArray.forEach((confetti) => {
             confetti.remove();
         });
@@ -38,13 +38,14 @@ var ElementType;
 class ImprovedElementCreator {
     static createElement(elementType, classes) {
         const element = document.createElement(elementType);
-        if (classes) {
-            if (typeof classes === "string") {
-                element.classList.add(classes);
-            }
-            else {
-                element.classList.add(...classes);
-            }
+        if (!classes) {
+            return element;
+        }
+        if (typeof classes === "string") {
+            element.classList.add(classes);
+        }
+        else {
+            element.classList.add(...classes);
         }
         return element;
     }
@@ -58,7 +59,7 @@ class BlockElement {
         this.onClick = onClick;
         this.div = this.createBlock();
         const ref = this;
-        this.clickHandler = this.click.bind(this);
+        this.clickHandler = this.click.bind(ref);
         this.div.addEventListener("click", this.clickHandler);
     }
     createBlock() {
@@ -78,12 +79,13 @@ class BlockElement {
         this.onClick && this.onClick(this);
     }
     open() {
+        this.div.appendChild(this.figure.getImgElementRef());
         const animationEndCallback = () => {
-            this.div.appendChild(this.figure.getImgElementRef());
-            this.div.classList.remove("flip");
+            //TODO Flip animation
+            // this.div.classList.remove("flip");
             this.div.removeEventListener("animationend", animationEndCallback);
         };
-        this.div.classList.add("flip");
+        // this.div.classList.add("flip");
         this.div.addEventListener("animationend", animationEndCallback);
     }
     reset(match) {
@@ -134,10 +136,10 @@ class Board {
             this.openedBlocks.push(block);
         }
         if (this.openedBlocks.length === this.limit) {
-            this.pairOpen();
+            this.pairCheck();
         }
     }
-    pairOpen() {
+    pairCheck() {
         const firstBlock = this.openedBlocks[0];
         const secondBlock = this.openedBlocks[1];
         const blocksMatch = firstBlock.getFigureRef().src === secondBlock.getFigureRef().src;
@@ -161,6 +163,7 @@ class Board {
         const gameOverHeadingRef = document.getElementById("gameoverMessage");
         const confettiAnimation = new ConfettiAnimation(gameOverHeadingRef);
         confettiAnimation.start();
+        // TODO clear
         setTimeout(() => confettiAnimation.stop(), 5000);
     }
     createBlockArray() {
@@ -207,6 +210,7 @@ class Board {
         }
     }
 }
-const gameBoard = new Board(4);
+const size = Number(localStorage.getItem('size'));
+const gameBoard = new Board(size);
 gameBoard.draw();
 //# sourceMappingURL=main.js.map
