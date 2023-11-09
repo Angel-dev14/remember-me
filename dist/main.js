@@ -1,4 +1,10 @@
 import { fields } from "./possibleImages.js";
+var Difficulties;
+(function (Difficulties) {
+    Difficulties["EASY"] = "EASY";
+    Difficulties["MEDIUM"] = "MEDIUM";
+    Difficulties["HARD"] = "HARD";
+})(Difficulties || (Difficulties = {}));
 class Animation {
     constructor(elementRef) {
         this.elementRef = elementRef;
@@ -112,6 +118,7 @@ class Board {
     constructor(settings) {
         this.matchedPairs = 0;
         this.pairTimerRunning = false;
+        this.gameTimeRef = document.getElementById("gameTimer");
         this.size = settings.size;
         this.boardSize = settings.size * settings.size;
         this.container = document.querySelector(".container");
@@ -125,6 +132,20 @@ class Board {
                 this.blocks[i][j] = blocksArray[i * settings.size + j];
             }
         }
+        this.startTimer(settings.timer);
+    }
+    startTimer(timer) {
+        let seconds = timer * 60; // Convert minutes to seconds
+        this.gameTimeRef.textContent = `${timer}:00`;
+        const intervalId = setInterval(() => {
+            seconds--;
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            this.gameTimeRef.textContent = `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+            if (seconds <= 0) {
+                clearInterval(intervalId); // Stop the timer when it reaches 0
+            }
+        }, 1000);
     }
     openBlock(block) {
         if (this.pairTimerRunning) {
@@ -210,19 +231,13 @@ class Board {
         }
     }
 }
-var Difficulties;
-(function (Difficulties) {
-    Difficulties["EASY"] = "EASY";
-    Difficulties["MEDIUM"] = "MEDIUM";
-    Difficulties["HARD"] = "HARD";
-})(Difficulties || (Difficulties = {}));
 const DifficultySettings = {
-    [Difficulties.EASY]: { timer: 10, timeoutSpeed: 5, size: 2 },
-    [Difficulties.MEDIUM]: { timer: 20, timeoutSpeed: 10, size: 4 },
-    [Difficulties.HARD]: { timer: 30, timeoutSpeed: 15, size: 6 },
+    [Difficulties.EASY]: { timer: 20, timeoutSpeed: 5, size: 2 },
+    [Difficulties.MEDIUM]: { timer: 15, timeoutSpeed: 10, size: 4 },
+    [Difficulties.HARD]: { timer: 10, timeoutSpeed: 15, size: 6 },
 };
 const urlParams = new URLSearchParams(window.location.search);
-const gameMode = urlParams.get('gameMode');
+const gameMode = urlParams.get("gameMode");
 const gameBoard = new Board(DifficultySettings[gameMode]);
 gameBoard.draw();
 //# sourceMappingURL=main.js.map

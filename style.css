@@ -86,7 +86,7 @@ body {
   }
 }
 
-#gameoverMessage {
+#gameoverMessage, #gameTimer {
   text-align: center;
   font-family: "Sedgwick Ave Display", cursive;
   font-size: 4em;

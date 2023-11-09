@@ -6,6 +6,11 @@ type BoardSettings = {
   size: number;
 };
 
+enum Difficulties {
+  EASY = "EASY",
+  MEDIUM = "MEDIUM",
+  HARD = "HARD",
+}
 
 abstract class Animation {
   protected elementRef: HTMLElement;
@@ -166,8 +171,12 @@ class Board {
   private size: number;
   private matchedPairs: number = 0;
   private pairTimerRunning: boolean = false;
+  private gameTimeRef: HTMLParagraphElement;
 
   constructor(settings: BoardSettings) {
+    this.gameTimeRef = document.getElementById(
+      "gameTimer"
+    ) as HTMLParagraphElement;
     this.size = settings.size;
     this.boardSize = settings.size * settings.size;
     this.container = document.querySelector(".container")!!;
@@ -182,6 +191,27 @@ class Board {
         this.blocks[i][j] = blocksArray[i * settings.size + j];
       }
     }
+    this.startTimer(settings.timer);
+  }
+  
+  startTimer(timer: number) {
+    let seconds = timer * 60; // Convert minutes to seconds
+    this.gameTimeRef.textContent = `${timer}:00`;
+
+    const intervalId = setInterval(() => {
+      seconds--;
+
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = seconds % 60;
+
+      this.gameTimeRef.textContent = `${minutes}:${
+        remainingSeconds < 10 ? "0" : ""
+      }${remainingSeconds}`;
+
+      if (seconds <= 0) {
+        clearInterval(intervalId); // Stop the timer when it reaches 0
+      }
+    }, 1000);
   }
 
   openBlock(block: BlockElement) {
@@ -276,7 +306,7 @@ class Board {
 
   draw() {
     for (let i = 0; i < this.blocks.length; i++) {
-      const row = ImprovedElementCreator.createElement(ElementType.DIV, "row") ;
+      const row = ImprovedElementCreator.createElement(ElementType.DIV, "row");
       for (let j = 0; j < this.blocks.length; j++) {
         const block = this.blocks[i][j].getDivElementRef();
         row?.appendChild(block);
@@ -285,19 +315,16 @@ class Board {
     }
   }
 }
-enum Difficulties {
-  EASY = "EASY",
-  MEDIUM = "MEDIUM",
-  HARD = "HARD",
-}
 
-const DifficultySettings: { [key in Difficulties]: { timer: number; timeoutSpeed: number; size: number } } = {
-  [Difficulties.EASY]: { timer: 10, timeoutSpeed: 5, size: 2 },
-  [Difficulties.MEDIUM]: { timer: 20, timeoutSpeed: 10, size: 4 },
-  [Difficulties.HARD]: { timer: 30, timeoutSpeed: 15, size: 6 },
+const DifficultySettings: {
+  [key in Difficulties]: { timer: number; timeoutSpeed: number; size: number };
+} = {
+  [Difficulties.EASY]: { timer: 20, timeoutSpeed: 5, size: 2 },
+  [Difficulties.MEDIUM]: { timer: 15, timeoutSpeed: 10, size: 4 },
+  [Difficulties.HARD]: { timer: 10, timeoutSpeed: 15, size: 6 },
 };
 
 const urlParams = new URLSearchParams(window.location.search);
-const gameMode = urlParams.get('gameMode') as Difficulties;
+const gameMode = urlParams.get("gameMode") as Difficulties;
 const gameBoard = new Board(DifficultySettings[gameMode]);
 gameBoard.draw();
