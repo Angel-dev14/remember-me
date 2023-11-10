@@ -7,7 +7,7 @@
   --off-white: #f1faee;
 }
 body {
-  background-image: url("./images/wallBgSmaller.jpg");
+  background-image: url("./images/backgrounds/wallBgSmaller.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -70,6 +70,7 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+  cursor: pointer;
 }
 
 .block:hover{

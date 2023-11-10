@@ -187,7 +187,7 @@ class Board {
     this.limit = 2;
     this.openedBlocks = [];
     this.blocks = [];
-    document.body.style.backgroundImage = "url(./images/containersBgSmaller.jpg)"
+    document.body.style.backgroundImage = "url(./images/backgrounds/containersBgSmaller.jpg)"
 
     const blocksArray = this.createBlockArray();
     for (let i = 0; i < settings.size; i++) {
@@ -284,7 +284,7 @@ class Board {
     const addedFields: { [key: string]: number } = {};
     for (let i = 0; i < this.boardSize; i++) {
       const field = fields[0];
-      const link = `images/${field}.png`;
+      const link = `images/animals/${field}.png`;
       const figure = new Figure(link);
       const block = new BlockElement(
         "block",
