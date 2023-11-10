@@ -1,3 +1,11 @@
+:root {
+  --light-blue: #8ecae6;
+  --medium-blue: #219ebc;
+  --dark-blue: #023047;
+  --yellowish-orange: #ffb703;
+  --orange: #fb8500;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -86,7 +94,8 @@ body {
   }
 }
 
-#gameoverMessage, #gameTimer {
+#gameoverMessage,
+#gameTimer {
   text-align: center;
   font-family: "Sedgwick Ave Display", cursive;
   font-size: 4em;
@@ -113,14 +122,15 @@ body {
 }
 
 .option {
-  width: 100%;
+  width: 66%;
   text-transform: uppercase;
   padding: 1em 0;
   text-align: center;
   font-size: 1.5em;
   font-weight: bold;
-  margin: 0.5em 0;
-  box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0, rgba(60, 64, 67, 0.15) 0 1px 3px 1px;
+  margin: 0.5em auto;
+  box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0,
+    rgba(60, 64, 67, 0.15) 0 1px 3px 1px;
 }
 
 .option:hover {
@@ -129,17 +139,22 @@ body {
 }
 
 .easy {
-  /*background: linear-gradient(rgba(0,0,139, 0.6), rgba(0,0,139, 0.40));*/
-  background-color: rgba(0,0,139, 0.5);
+  background-color: var(--light-blue);
   color: white;
 }
 
 .medium {
-  background-color: rgba(0,0,139, 0.75);
+  background-color: var(--medium-blue);
   color: white;
 }
 
 .hard {
-  background-color: rgba(0,0,139,1);
+  background-color: var(--dark-blue);
   color: white;
+}
+
+.quit {
+  display: block;
+  background-color: var(--orange);
+  margin-top: 3em;
 }

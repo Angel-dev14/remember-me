@@ -1,50 +1,46 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Remember me</title>
-    <link rel="stylesheet" href="style.css"/>
-    <link rel="preconnect" href="https://fonts.googleapis.com"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-    <link
-            href="https://fonts.googleapis.com/css2?family=Sedgwick+Ave+Display&display=swap"
-            rel="stylesheet"
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
     />
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Remember me</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sedgwick+Ave+Display&display=swap"
+      rel="stylesheet"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
     <script
-            src="https://kit.fontawesome.com/5322fc51ca.js"
-            crossorigin="anonymous"
+      src="https://kit.fontawesome.com/5322fc51ca.js"
+      crossorigin="anonymous"
     ></script>
-</head>
-<body>
-
-<div class="start-game">
-    <div class="title">
+  </head>
+  <body>
+    <custom-header></custom-header>
+    <div class="start-game">
+      <div class="title">
         <h3>Welcome</h3>
-    </div>
-    <div>
+      </div>
+      <div>
         <p class="desc-text">Please choose a difficulty</p>
+      </div>
+      <div class="options">
+        <div class="option easy" id="easy">Easy</div>
+        <div class="option medium" id="medium">Medium</div>
+        <div class="option hard" id="hard">Hard</div>
+        <div class="option quit" id="quit">Quit</div>
+      </div>
     </div>
-    <div class="options">
-        <div class="option easy" id="easy">
-            Easy
-        </div>
-        <div class="option medium" id="medium">
-            Medium
-        </div>
-        <div class="option hard" id="hard">
-            Hard
-        </div>
-<!--      TODO -->
-<!--      <div class="option quit">-->
-<!--        Quit-->
-<!--      </div>-->
-    </div>
-</div>
-<script src="dist/start.js"></script>
-</body>
+    <script type="module" src="dist/start.js"></script>
+
+  </body>
 </html>

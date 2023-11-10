@@ -135,6 +135,7 @@ class Board {
         this.startTimer(settings.timer);
     }
     startTimer(timer) {
+        // This should be a class perhaps, to handle Timers
         let seconds = timer * 60; // Convert minutes to seconds
         this.gameTimeRef.textContent = `${timer}:00`;
         const intervalId = setInterval(() => {

@@ -3,7 +3,22 @@ enum Difficulty {
   MEDIUM = "MEDIUM",
   HARD = "HARD",
 }
+export const Header = class Header extends HTMLElement {
+  connectedCallback() {
+    this.innerHTML = `
+    <div class="header">
+      <div class="title">
+        <p>Remember Me</p>
+      </div>
+      <div class="logo">
+          <i class="fa-solid fa-brain" style="color: white"></i>
+      </div>
+    </div>
+      `;
+  }
+};
 
+customElements.define("custom-header", Header);
 class Game {
   private gameModes: GameMode[];
 
@@ -12,11 +27,25 @@ class Game {
     Object.values(Difficulty).forEach((diff) => {
       const gameMode = GameModeCreator.create(diff);
       this.gameModes.push(gameMode);
+      this.start();
     });
   }
 
   start() {
-    // this.gameMode.start()
+    const quitBtn = new Quit();
+  }
+}
+
+class Quit {
+  private quitBtnRef: HTMLButtonElement;
+
+  constructor() {
+    this.quitBtnRef = document.getElementById("quit") as HTMLButtonElement;
+    this.quitBtnRef.addEventListener("click", () => this.buttonClick());
+  }
+
+  buttonClick() {
+    console.log("Quit clicked");
   }
 }
 
@@ -82,5 +111,6 @@ class HardMode extends GameMode {
     });
   }
 }
-
-const game = new Game();
+if (window.location.pathname.endsWith("/remember-me/")) {
+  const game = new Game();
+}

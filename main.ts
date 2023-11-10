@@ -1,4 +1,5 @@
 import { fields } from "./possibleImages.js";
+import { Header } from "./start.js";
 
 type BoardSettings = {
   timer: number;
@@ -193,8 +194,9 @@ class Board {
     }
     this.startTimer(settings.timer);
   }
-  
+
   startTimer(timer: number) {
+    // This should be a class perhaps, to handle Timers
     let seconds = timer * 60; // Convert minutes to seconds
     this.gameTimeRef.textContent = `${timer}:00`;
 

@@ -1,20 +1,44 @@
-"use strict";
 var Difficulty;
 (function (Difficulty) {
     Difficulty["EASY"] = "EASY";
     Difficulty["MEDIUM"] = "MEDIUM";
     Difficulty["HARD"] = "HARD";
 })(Difficulty || (Difficulty = {}));
+export const Header = class Header extends HTMLElement {
+    connectedCallback() {
+        this.innerHTML = `
+    <div class="header">
+      <div class="title">
+        <p>Remember Me</p>
+      </div>
+      <div class="logo">
+          <i class="fa-solid fa-brain" style="color: white"></i>
+      </div>
+    </div>
+      `;
+    }
+};
+customElements.define("custom-header", Header);
 class Game {
     constructor() {
         this.gameModes = [];
         Object.values(Difficulty).forEach((diff) => {
             const gameMode = GameModeCreator.create(diff);
             this.gameModes.push(gameMode);
+            this.start();
         });
     }
     start() {
-        // this.gameMode.start()
+        const quitBtn = new Quit();
+    }
+}
+class Quit {
+    constructor() {
+        this.quitBtnRef = document.getElementById("quit");
+        this.quitBtnRef.addEventListener("click", () => this.buttonClick());
+    }
+    buttonClick() {
+        console.log("Quit clicked");
     }
 }
 class GameModeCreator {
@@ -67,5 +91,7 @@ class HardMode extends GameMode {
         });
     }
 }
-const game = new Game();
+if (window.location.pathname.endsWith("/remember-me/")) {
+    const game = new Game();
+}
 //# sourceMappingURL=start.js.map
