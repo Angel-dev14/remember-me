@@ -66,7 +66,14 @@ body {
 
 .container .block {
   margin: 0.5em;
-  background-color: black;
+  background-image: url("./images/containerIconNonTransparent.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.block:hover{
+  background-image: url("./images/containerIcon.png") ;
 }
 
 .block img {
