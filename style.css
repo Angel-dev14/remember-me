@@ -13,7 +13,6 @@ body {
   background-position: center;
 }
 
-
 * {
   margin: 0;
   padding: 0;
@@ -50,6 +49,15 @@ body {
   display: flex;
   align-items: center;
   flex-direction: column;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px,
+    rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
+  background-color: var(--off-white);
+  border-radius: 20px;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  padding: 0.5em 0.8em;
 }
 
 .row {
@@ -102,15 +110,28 @@ body {
   }
 }
 
-#gameoverMessage,
-#gameTimer {
+.timer-container {
+  background-color: var(--light-blue);
+  margin: 0.5em auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  padding: 1em 0.8em;
+  border-radius: 10px;
+  font-size: 1.2em;
+  font-family: "Inconsolata", monospace;
+}
+
+#gameoverMessage {
   text-align: center;
   font-family: "Sedgwick Ave Display", cursive;
   font-size: 4em;
 }
 
 #gameTimer {
-  font-family: "Inconsolata", monospace;
+  font-size: 3.5em;
   color: var(--off-white);
 }
 
