@@ -139,6 +139,7 @@ class BlockElement {
 
   reset(match: Boolean) {
     if (match) {
+      this.div.style.border = "green 2px solid"
       this.div.removeEventListener("click", this.clickHandler);
     } else {
       this.div.removeChild(this.figure.getImgElementRef());
@@ -173,11 +174,13 @@ class Board {
   private matchedPairs: number = 0;
   private pairTimerRunning: boolean = false;
   private gameTimeRef: HTMLParagraphElement;
+  private settings:BoardSettings;
 
   constructor(settings: BoardSettings) {
     this.gameTimeRef = document.getElementById(
       "gameTimer"
     ) as HTMLParagraphElement;
+    this.settings = settings;
     this.size = settings.size;
     this.boardSize = settings.size * settings.size;
     this.container = document.querySelector(".container")!!;
@@ -248,10 +251,11 @@ class Board {
     const blocksMatch =
       firstBlock.getFigureRef().src === secondBlock.getFigureRef().src;
     this.pairTimerRunning = true;
+    const timer = blocksMatch ? 500 : this.settings.timeoutSpeed
     setTimeout(() => {
       this.resetPair(blocksMatch);
       this.pairTimerRunning = false;
-    }, 2000);
+    }, timer);
   }
 
   resetPair(blocksMatch: boolean) {
@@ -331,9 +335,9 @@ class Board {
 const DifficultySettings: {
   [key in Difficulties]: { timer: number; timeoutSpeed: number; size: number };
 } = {
-  [Difficulties.EASY]: { timer: 5, timeoutSpeed: 5, size: 2 },
-  [Difficulties.MEDIUM]: { timer: 5, timeoutSpeed: 10, size: 4 },
-  [Difficulties.HARD]: { timer: 3, timeoutSpeed: 15, size: 6 },
+  [Difficulties.EASY]: { timer: 5, timeoutSpeed: 2000, size: 2 },
+  [Difficulties.MEDIUM]: { timer: 5, timeoutSpeed: 1500, size: 4 },
+  [Difficulties.HARD]: { timer: 3, timeoutSpeed: 1200, size: 6 },
 };
 
 const urlParams = new URLSearchParams(window.location.search);
