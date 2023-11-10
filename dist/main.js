@@ -125,6 +125,7 @@ class Board {
         this.limit = 2;
         this.openedBlocks = [];
         this.blocks = [];
+        document.body.style.backgroundImage = "url(./images/containersBgSmaller.jpg)";
         const blocksArray = this.createBlockArray();
         for (let i = 0; i < settings.size; i++) {
             this.blocks[i] = [];
@@ -140,6 +141,14 @@ class Board {
         this.gameTimeRef.textContent = `${timer}:00`;
         const intervalId = setInterval(() => {
             seconds--;
+            switch (seconds) {
+                case 59:
+                    this.gameTimeRef.style.color = "#ffb703";
+                    break;
+                case 30:
+                    this.gameTimeRef.style.color = "#e63946";
+                    break;
+            }
             const minutes = Math.floor(seconds / 60);
             const remainingSeconds = seconds % 60;
             this.gameTimeRef.textContent = `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
@@ -233,9 +242,9 @@ class Board {
     }
 }
 const DifficultySettings = {
-    [Difficulties.EASY]: { timer: 20, timeoutSpeed: 5, size: 2 },
-    [Difficulties.MEDIUM]: { timer: 15, timeoutSpeed: 10, size: 4 },
-    [Difficulties.HARD]: { timer: 10, timeoutSpeed: 15, size: 6 },
+    [Difficulties.EASY]: { timer: 5, timeoutSpeed: 5, size: 2 },
+    [Difficulties.MEDIUM]: { timer: 5, timeoutSpeed: 10, size: 4 },
+    [Difficulties.HARD]: { timer: 3, timeoutSpeed: 15, size: 6 },
 };
 const urlParams = new URLSearchParams(window.location.search);
 const gameMode = urlParams.get("gameMode");

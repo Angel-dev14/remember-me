@@ -11,7 +11,7 @@ export const Header = class Header extends HTMLElement {
         <p>Remember Me</p>
       </div>
       <div class="logo">
-          <i class="fa-solid fa-brain" style="color: white"></i>
+          <a href="http://127.0.0.1:5500/Websites/Lesson%202%20-%20Memory%20Game/remember-me/"><i class="fa-solid fa-brain" style="color: white"></i></a>
       </div>
     </div>
       `;

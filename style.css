@@ -4,7 +4,15 @@
   --dark-blue: #023047;
   --yellowish-orange: #ffb703;
   --orange: #fb8500;
+  --off-white: #f1faee;
 }
+body {
+  background-image: url("./images/wallBgSmaller.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
 
 * {
   margin: 0;
@@ -21,7 +29,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #07275f;
+  background-color: var(--dark-blue);
 }
 
 .logo {
@@ -99,6 +107,11 @@ body {
   text-align: center;
   font-family: "Sedgwick Ave Display", cursive;
   font-size: 4em;
+}
+
+#gameTimer {
+  font-family: "Inconsolata", monospace;
+  color: var(--off-white);
 }
 
 .start-game {
