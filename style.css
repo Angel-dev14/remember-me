@@ -146,9 +146,9 @@ body {
   background-position: center;
 }
 
-/* .block:hover {
+.front:hover {
   background-image: url("./images/blockBg/blockHover.png");
-} */
+}
 
 .block img {
   -webkit-user-select: none; /* Safari */

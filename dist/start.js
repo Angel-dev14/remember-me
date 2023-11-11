@@ -23,6 +23,23 @@ export const Header = class Header extends HTMLElement {
           </div>
     </div>
       `;
+        this.setupEventListeners();
+    }
+    setupEventListeners() {
+        const musicButton = this.querySelector("#musicButton");
+        const soundButton = this.querySelector("#soundButton");
+        if (musicButton) {
+            musicButton.addEventListener("click", function () {
+                musicButton.classList.toggle("activeMusic");
+                musicButton.classList.toggle("deactivatedMusic");
+            });
+        }
+        if (soundButton) {
+            soundButton.addEventListener("click", function () {
+                soundButton.classList.toggle("activeSounds");
+                soundButton.classList.toggle("deactivatedSounds");
+            });
+        }
     }
 };
 customElements.define("custom-header", Header);
