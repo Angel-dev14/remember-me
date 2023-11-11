@@ -63,23 +63,37 @@ body {
 }
 
 .header-buttons {
+  /* TODO Center the title and logo */
 }
 .header-button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
+  background-size: cover;
+  border: none; 
+  border-radius: 40px;
+  outline: none;
   cursor: pointer;
-  transition: background-color 0.3s;
+  width: 50px;
+  height: 50px;
+  padding: 0;
 }
 
-.active {
-  background-color: #4caf50; /* Green for active */
-  color: white;
+.header-button:first-of-type {
+  margin-right: 1em;
 }
 
-.deactivated {
-  background-color: #f44336; /* Red for deactivated */
-  color: white;
+.activeMusic {
+  background-image: url("images/soundSettings/musicOn.png");
+}
+
+.deactivatedMusic {
+  background-image: url("images/soundSettings/musicOff.png");
+}
+
+.activeSounds {
+  background-image: url("images/soundSettings/soundsOn.png");
+}
+
+.deactivatedSounds {
+  background-image: url("images/soundSettings/soundsOff.png");
 }
 
 .container {

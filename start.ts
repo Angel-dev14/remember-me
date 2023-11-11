@@ -17,8 +17,8 @@ export const Header = class Header extends HTMLElement {
           </div>
 
           <div class="header-buttons">
-          <button id="musicButton" class="header-button active">Music</button>
-          <button id="soundButton" class="header-button active">Sounds</button>
+          <button id="musicButton" class="header-button activeMusic"></button>
+          <button id="soundButton" class="header-button activeSounds"></button>
           </div>
     </div>
       `;
