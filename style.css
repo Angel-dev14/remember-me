@@ -91,16 +91,21 @@ body {
 
 .container .block {
   margin: 0.5em;
+
+  cursor: pointer;
+  perspective: 1000px;
+}
+
+.front {
   background-image: url("./images/blockBg/blockForeground.png");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  cursor: pointer;
 }
 
-.block:hover {
+/* .block:hover {
   background-image: url("./images/blockBg/blockHover.png");
-}
+} */
 
 .block img {
   -webkit-user-select: none; /* Safari */
@@ -109,22 +114,37 @@ body {
   user-select: none; /* Standard syntax */
 }
 
-@keyframes flip {
-  0% {
-    transform: rotateY(0deg);
-    background-color: black;
-  }
-  50% {
-    background-color: black;
-  }
-  100% {
-    transform: rotateY(180deg);
-    background-color: transparent;
-  }
+.flip-container .flipper {
+  transition: 0.6s;
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.flip-container .flipper.flip {
+  transform: rotateY(180deg);
+}
+
+.front,
+.back {
+  backface-visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 100px;
+}
+
+.front {
+  z-index: 2;
+  transform: rotateY(0deg);
+}
+
+.back {
+  transform: rotateY(180deg);
 }
 
 .flip {
-  animation: flip 0.5s linear;
+  transform: rotateY(180deg);
 }
 
 .confetti {

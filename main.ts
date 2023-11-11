@@ -101,15 +101,24 @@ class BlockElement {
     const ref = this;
     this.clickHandler = this.click.bind(ref);
     this.div.addEventListener("click", this.clickHandler);
+    
   }
 
   private createBlock(): HTMLDivElement {
-    const divElement = ImprovedElementCreator.createElement(
-      ElementType.DIV
-    ) as HTMLDivElement;
+    const divElement = ImprovedElementCreator.createElement(ElementType.DIV) as HTMLDivElement;
     divElement.style.width = `${this.width}px`;
     divElement.style.height = `${this.width}px`;
-    divElement.classList.add("block");
+    divElement.classList.add("block", "flip-container");
+  
+    const flipper = ImprovedElementCreator.createElement(ElementType.DIV) as HTMLDivElement;
+    flipper.classList.add("flipper");
+  
+    const front = ImprovedElementCreator.createElement(ElementType.DIV, 'front') as HTMLDivElement;
+    const back = ImprovedElementCreator.createElement(ElementType.DIV, 'back') as HTMLDivElement;
+    flipper.appendChild(front);
+    flipper.appendChild(back);
+  
+    divElement.appendChild(flipper);
     return divElement;
   }
 
@@ -126,24 +135,26 @@ class BlockElement {
   }
 
   open() {
-    this.div.appendChild(this.figure.getImgElementRef());
-    const animationEndCallback = () => {
-      //TODO Flip animation
-      // this.div.classList.remove("flip");
-      this.div.removeEventListener("animationend", animationEndCallback);
-    };
-    // this.div.classList.add("flip");
-    this.div.addEventListener("animationend", animationEndCallback);
+    const back = this.div.querySelector('.back');
+    if (back) {
+      back.appendChild(this.figure.getImgElementRef());
+    }
+    this.div.querySelector('.flipper')?.classList.toggle('flip');
   }
+  
 
   reset(match: Boolean) {
+    const back = this.div.querySelector('.back');
     if (match) {
       this.div.style.border = "green 2px solid"
       this.div.removeEventListener("click", this.clickHandler);
     } else {
-      this.div.removeChild(this.figure.getImgElementRef());
+      if (back && back.contains(this.figure.getImgElementRef())) {
+        back.removeChild(this.figure.getImgElementRef());
+      }
     }
   }
+  
 }
 
 class Figure {

@@ -72,7 +72,14 @@ class BlockElement {
         const divElement = ImprovedElementCreator.createElement(ElementType.DIV);
         divElement.style.width = `${this.width}px`;
         divElement.style.height = `${this.width}px`;
-        divElement.classList.add("block");
+        divElement.classList.add("block", "flip-container");
+        const flipper = ImprovedElementCreator.createElement(ElementType.DIV);
+        flipper.classList.add("flipper");
+        const front = ImprovedElementCreator.createElement(ElementType.DIV, 'front');
+        const back = ImprovedElementCreator.createElement(ElementType.DIV, 'back');
+        flipper.appendChild(front);
+        flipper.appendChild(back);
+        divElement.appendChild(flipper);
         return divElement;
     }
     getDivElementRef() {
@@ -85,22 +92,23 @@ class BlockElement {
         this.onClick && this.onClick(this);
     }
     open() {
-        this.div.appendChild(this.figure.getImgElementRef());
-        const animationEndCallback = () => {
-            //TODO Flip animation
-            // this.div.classList.remove("flip");
-            this.div.removeEventListener("animationend", animationEndCallback);
-        };
-        // this.div.classList.add("flip");
-        this.div.addEventListener("animationend", animationEndCallback);
+        var _a;
+        const back = this.div.querySelector('.back');
+        if (back) {
+            back.appendChild(this.figure.getImgElementRef());
+        }
+        (_a = this.div.querySelector('.flipper')) === null || _a === void 0 ? void 0 : _a.classList.toggle('flip');
     }
     reset(match) {
+        const back = this.div.querySelector('.back');
         if (match) {
             this.div.style.border = "green 2px solid";
             this.div.removeEventListener("click", this.clickHandler);
         }
         else {
-            this.div.removeChild(this.figure.getImgElementRef());
+            if (back && back.contains(this.figure.getImgElementRef())) {
+                back.removeChild(this.figure.getImgElementRef());
+            }
         }
     }
 }
