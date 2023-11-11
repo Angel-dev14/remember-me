@@ -159,14 +159,12 @@ class BlockElement {
       this.div.style.border = "green 2px solid";
       this.div.removeEventListener("click", this.clickHandler);
     } else {
-      // Remove the figure's image from the back
-      if (back && back.contains(this.figure.getImgElementRef())) {
-        back.removeChild(this.figure.getImgElementRef());
-      }
-
       // Reverse the flip animation if the block is currently flipped
-      if (flipper && flipper.classList.contains("flip")) {
+      if (flipper && back) {
         flipper.classList.remove("flip");
+        setTimeout(() => {
+          back.removeChild(this.figure.getImgElementRef());
+        }, 600);
       }
     }
   }
