@@ -38,6 +38,43 @@
 
     <div class="container"></div>
     <h2 id="gameoverMessage"></h2>
+    <div class="container" id="statsAndOptions">
+      <div class="row">
+        <div class="column">
+          <span class="number">0</span>
+          <span>Moves</span>
+        </div>
+        <div class="column">
+          <span class="number">0</span>
+          <span>Misses</span>
+        </div>
+        <div class="column">
+          <span class="number">0</span>
+          <span>Correct Guesses</span>
+        </div>
+        <div class="column">
+          <span class="number">0%</span>
+          <span>Accuracy</span>
+        </div>
+      </div>
+      <div class="row">
+        <button class="quit-game">
+          <i class="fa-solid fa-xmark red-x-mark"></i>Cancel
+        </button>
+        <div class="column">
+          <input type="checkbox" name="showOnlyNumbers" id="showOnlyNumbers" />
+          <label for="showOnlyNumbers">Show number</label>
+        </div>
+        <div class="column">
+          <select name="speedSelect" id="speedSelect">
+            <option value="1000">Fast</option>
+            <option value="1500" selected>Normal</option>
+            <option value="2000">Slow</option>
+          </select>
+          <label for="speedSelect">Speed</label>
+        </div>
+      </div>
+    </div>
     <div class="footer"></div>
   </body>
 </html>

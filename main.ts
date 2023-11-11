@@ -1,5 +1,4 @@
 import { fields } from "./possibleImages.js";
-import { Header } from "./start.js";
 
 type BoardSettings = {
   timer: number;
@@ -337,7 +336,7 @@ const DifficultySettings: {
 } = {
   [Difficulties.EASY]: { timer: 5, timeoutSpeed: 2000, size: 2 },
   [Difficulties.MEDIUM]: { timer: 5, timeoutSpeed: 1500, size: 4 },
-  [Difficulties.HARD]: { timer: 3, timeoutSpeed: 1200, size: 6 },
+  [Difficulties.HARD]: { timer: 3, timeoutSpeed: 1000, size: 6 },
 };
 
 const urlParams = new URLSearchParams(window.location.search);

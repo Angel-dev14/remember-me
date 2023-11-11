@@ -11,6 +11,7 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+  position: relative;
 }
 
 * {
@@ -62,6 +63,22 @@ body {
 
 .row {
   display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 1.5em;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 1em 0;
+  gap: 0.4em;
+}
+
+.number {
+  font-weight: bold;
 }
 
 .container .block {
@@ -73,8 +90,8 @@ body {
   cursor: pointer;
 }
 
-.block:hover{
-  background-image: url("./images/containerIcon.png") ;
+.block:hover {
+  background-image: url("./images/containerIcon.png");
 }
 
 .block img {
@@ -130,6 +147,30 @@ body {
   border-radius: 10px;
   font-size: 1.2em;
   font-family: "Inconsolata", monospace;
+  position: absolute;
+  right: 1em;
+}
+
+@media screen and (max-width: 960px) {
+  .timer-container {
+    position: static;
+    right: auto;
+    margin: 0.5em auto;
+  }
+
+  .container {
+    padding: 0.25em, 0.4em;
+  }
+  .row {
+    gap: 0.2em;
+    flex-wrap: wrap;
+  }
+}
+
+@media screen and (max-width: 1350px) {
+  #statsAndOptions {
+    position: static !important;
+  }
 }
 
 #gameoverMessage {
@@ -209,4 +250,30 @@ body {
   display: block;
   background-color: var(--orange);
   margin-top: 3em;
+}
+
+#statsAndOptions {
+  position: absolute;
+  left: 1em;
+  top: 4em;
+}
+
+.quit-game {
+  padding: 0.4em 0.5em;
+  border: 1px solid var(--light-blue);
+  border-radius: 10px;
+  background-color: var(--yellowish-orange);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.quit-game:hover {
+  background-color: var(--orange);
+}
+
+.red-x-mark {
+  color: red;
+  font-size: 2em;
+  margin-right: 0.3em;
 }
