@@ -35,10 +35,11 @@ class ConfettiAnimation extends Animation {
   start() {
     for (let i = 0; i < this.confettiCount; i++) {
       const confetti = ImprovedElementCreator.createElement(
-        ElementType.DIV
+        ElementType.DIV,
+        "confetti",
+        undefined,
+        "🎉"
       ) as HTMLDivElement;
-      confetti.classList.add("confetti");
-      confetti.textContent = "🎉";
       confetti.style.left = `${Math.random() * 100}vw`;
       confetti.style.animationDuration = `${Math.random() * 2 + 3}s`;
       this.confettiArray.push(confetti);
@@ -62,7 +63,12 @@ enum ElementType {
 }
 
 class ImprovedElementCreator {
-  static createElement(elementType: ElementType, classes?: string | string[]) {
+  static createElement(
+    elementType: ElementType,
+    classes?: string | string[],
+    size?: [number, number ],
+    textContent?: string
+  ) {
     const element = document.createElement(elementType);
     if (!classes) {
       return element;
@@ -71,6 +77,16 @@ class ImprovedElementCreator {
       element.classList.add(classes);
     } else {
       element.classList.add(...classes);
+    }
+
+    if (size) {
+      const [width, height] = size;
+      element.style.width = `${width}px`;
+      element.style.height = `${height}px`;
+    }
+
+    if (textContent) {
+      element.textContent = textContent;
     }
     return element;
   }
@@ -105,16 +121,15 @@ class BlockElement {
 
   private createBlock(): HTMLDivElement {
     const divElement = ImprovedElementCreator.createElement(
-      ElementType.DIV
+      ElementType.DIV,
+      ["block", "flip-container"],
+      [100, 100]
     ) as HTMLDivElement;
-    divElement.style.width = `${this.width}px`;
-    divElement.style.height = `${this.width}px`;
-    divElement.classList.add("block", "flip-container");
 
     const flipper = ImprovedElementCreator.createElement(
-      ElementType.DIV
+      ElementType.DIV,
+      "flipper"
     ) as HTMLDivElement;
-    flipper.classList.add("flipper");
 
     const front = ImprovedElementCreator.createElement(
       ElementType.DIV,
@@ -159,7 +174,6 @@ class BlockElement {
       this.div.style.border = "green 2px solid";
       this.div.removeEventListener("click", this.clickHandler);
     } else {
-      // Reverse the flip animation if the block is currently flipped
       if (flipper && back) {
         flipper.classList.remove("flip");
         setTimeout(() => {
@@ -178,8 +192,6 @@ class Figure {
       ElementType.IMG
     ) as HTMLImageElement;
     this.img.src = link;
-    this.img.style.width = "inherit";
-    this.img.style.height = "inherit";
   }
 
   getImgElementRef() {

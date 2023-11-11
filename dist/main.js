@@ -18,9 +18,7 @@ class ConfettiAnimation extends Animation {
     }
     start() {
         for (let i = 0; i < this.confettiCount; i++) {
-            const confetti = ImprovedElementCreator.createElement(ElementType.DIV);
-            confetti.classList.add("confetti");
-            confetti.textContent = "🎉";
+            const confetti = ImprovedElementCreator.createElement(ElementType.DIV, "confetti", undefined, "🎉");
             confetti.style.left = `${Math.random() * 100}vw`;
             confetti.style.animationDuration = `${Math.random() * 2 + 3}s`;
             this.confettiArray.push(confetti);
@@ -42,7 +40,7 @@ var ElementType;
     ElementType["IMG"] = "img";
 })(ElementType || (ElementType = {}));
 class ImprovedElementCreator {
-    static createElement(elementType, classes) {
+    static createElement(elementType, classes, size, textContent) {
         const element = document.createElement(elementType);
         if (!classes) {
             return element;
@@ -52,6 +50,14 @@ class ImprovedElementCreator {
         }
         else {
             element.classList.add(...classes);
+        }
+        if (size) {
+            const [width, height] = size;
+            element.style.width = `${width}px`;
+            element.style.height = `${height}px`;
+        }
+        if (textContent) {
+            element.textContent = textContent;
         }
         return element;
     }
@@ -69,12 +75,8 @@ class BlockElement {
         this.div.addEventListener("click", this.clickHandler);
     }
     createBlock() {
-        const divElement = ImprovedElementCreator.createElement(ElementType.DIV);
-        divElement.style.width = `${this.width}px`;
-        divElement.style.height = `${this.width}px`;
-        divElement.classList.add("block", "flip-container");
-        const flipper = ImprovedElementCreator.createElement(ElementType.DIV);
-        flipper.classList.add("flipper");
+        const divElement = ImprovedElementCreator.createElement(ElementType.DIV, ["block", "flip-container"], [100, 100]);
+        const flipper = ImprovedElementCreator.createElement(ElementType.DIV, "flipper");
         const front = ImprovedElementCreator.createElement(ElementType.DIV, "front");
         const back = ImprovedElementCreator.createElement(ElementType.DIV, "back");
         flipper.appendChild(front);
@@ -107,7 +109,6 @@ class BlockElement {
             this.div.removeEventListener("click", this.clickHandler);
         }
         else {
-            // Reverse the flip animation if the block is currently flipped
             if (flipper && back) {
                 flipper.classList.remove("flip");
                 setTimeout(() => {
@@ -121,8 +122,6 @@ class Figure {
     constructor(link) {
         this.img = ImprovedElementCreator.createElement(ElementType.IMG);
         this.img.src = link;
-        this.img.style.width = "inherit";
-        this.img.style.height = "inherit";
     }
     getImgElementRef() {
         return this.img;
