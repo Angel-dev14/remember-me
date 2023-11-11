@@ -32,6 +32,13 @@ body {
   background-color: var(--dark-blue);
 }
 
+.header img {
+  border-radius: 20px;
+}
+.header a {
+  display: inherit;
+}
+
 .logo {
   font-size: 2.5em;
 }
@@ -83,7 +90,7 @@ body {
 
 .container .block {
   margin: 0.5em;
-  background-image: url("./images/containerIconNonTransparent.jpg");
+  background-image: url("./images/blockBg/blockForeground.png");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -91,7 +98,7 @@ body {
 }
 
 .block:hover {
-  background-image: url("./images/containerIcon.png");
+  background-image: url("./images/blockBg/blockHover.png");
 }
 
 .block img {
