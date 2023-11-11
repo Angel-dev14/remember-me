@@ -51,6 +51,35 @@ body {
   font-family: "Sedgwick Ave Display", cursive;
   color: white;
   padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-title {
+  display: flex;
+  gap: 1em;
+  margin: 0 auto;
+}
+
+.header-buttons {
+}
+.header-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.active {
+  background-color: #4caf50; /* Green for active */
+  color: white;
+}
+
+.deactivated {
+  background-color: #f44336; /* Red for deactivated */
+  color: white;
 }
 
 .container {

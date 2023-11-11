@@ -312,7 +312,7 @@ class Board {
     );
     confettiAnimation.start();
     // TODO clear
-    setTimeout(() => confettiAnimation.stop(), 5000);
+    setTimeout(() => confettiAnimation.stop(), 6000);
   }
 
   createBlockArray(): BlockElement[] {

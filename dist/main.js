@@ -211,7 +211,7 @@ class Board {
         const confettiAnimation = new ConfettiAnimation(gameOverHeadingRef);
         confettiAnimation.start();
         // TODO clear
-        setTimeout(() => confettiAnimation.stop(), 5000);
+        setTimeout(() => confettiAnimation.stop(), 6000);
     }
     createBlockArray() {
         let blocksArray = [];
