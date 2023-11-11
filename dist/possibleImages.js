@@ -7,5 +7,13 @@ export const fields = [
     "giraffe",
     "penguin",
     "rabbit",
+    "bear",
+    "elephant",
+    "frog",
+    "giraffe",
+    "horse",
+    "kangaroo",
+    "squirrel",
+    "zebra"
 ];
 //# sourceMappingURL=possibleImages.js.map
