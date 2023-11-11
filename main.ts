@@ -101,23 +101,32 @@ class BlockElement {
     const ref = this;
     this.clickHandler = this.click.bind(ref);
     this.div.addEventListener("click", this.clickHandler);
-    
   }
 
   private createBlock(): HTMLDivElement {
-    const divElement = ImprovedElementCreator.createElement(ElementType.DIV) as HTMLDivElement;
+    const divElement = ImprovedElementCreator.createElement(
+      ElementType.DIV
+    ) as HTMLDivElement;
     divElement.style.width = `${this.width}px`;
     divElement.style.height = `${this.width}px`;
     divElement.classList.add("block", "flip-container");
-  
-    const flipper = ImprovedElementCreator.createElement(ElementType.DIV) as HTMLDivElement;
+
+    const flipper = ImprovedElementCreator.createElement(
+      ElementType.DIV
+    ) as HTMLDivElement;
     flipper.classList.add("flipper");
-  
-    const front = ImprovedElementCreator.createElement(ElementType.DIV, 'front') as HTMLDivElement;
-    const back = ImprovedElementCreator.createElement(ElementType.DIV, 'back') as HTMLDivElement;
+
+    const front = ImprovedElementCreator.createElement(
+      ElementType.DIV,
+      "front"
+    ) as HTMLDivElement;
+    const back = ImprovedElementCreator.createElement(
+      ElementType.DIV,
+      "back"
+    ) as HTMLDivElement;
     flipper.appendChild(front);
     flipper.appendChild(back);
-  
+
     divElement.appendChild(flipper);
     return divElement;
   }
@@ -135,26 +144,32 @@ class BlockElement {
   }
 
   open() {
-    const back = this.div.querySelector('.back');
+    const back = this.div.querySelector(".back");
     if (back) {
       back.appendChild(this.figure.getImgElementRef());
     }
-    this.div.querySelector('.flipper')?.classList.toggle('flip');
+    this.div.querySelector(".flipper")?.classList.toggle("flip");
   }
-  
 
   reset(match: Boolean) {
-    const back = this.div.querySelector('.back');
+    const flipper = this.div.querySelector(".flipper");
+    const back = this.div.querySelector(".back");
+
     if (match) {
-      this.div.style.border = "green 2px solid"
+      this.div.style.border = "green 2px solid";
       this.div.removeEventListener("click", this.clickHandler);
     } else {
+      // Remove the figure's image from the back
       if (back && back.contains(this.figure.getImgElementRef())) {
         back.removeChild(this.figure.getImgElementRef());
       }
+
+      // Reverse the flip animation if the block is currently flipped
+      if (flipper && flipper.classList.contains("flip")) {
+        flipper.classList.remove("flip");
+      }
     }
   }
-  
 }
 
 class Figure {
@@ -184,7 +199,7 @@ class Board {
   private matchedPairs: number = 0;
   private pairTimerRunning: boolean = false;
   private gameTimeRef: HTMLParagraphElement;
-  private settings:BoardSettings;
+  private settings: BoardSettings;
 
   constructor(settings: BoardSettings) {
     this.gameTimeRef = document.getElementById(
@@ -197,7 +212,8 @@ class Board {
     this.limit = 2;
     this.openedBlocks = [];
     this.blocks = [];
-    document.body.style.backgroundImage = "url(./images/backgrounds/containersBgSmaller.jpg)"
+    document.body.style.backgroundImage =
+      "url(./images/backgrounds/containersBgSmaller.jpg)";
 
     const blocksArray = this.createBlockArray();
     for (let i = 0; i < settings.size; i++) {
@@ -261,7 +277,7 @@ class Board {
     const blocksMatch =
       firstBlock.getFigureRef().src === secondBlock.getFigureRef().src;
     this.pairTimerRunning = true;
-    const timer = blocksMatch ? 500 : this.settings.timeoutSpeed
+    const timer = blocksMatch ? 500 : this.settings.timeoutSpeed;
     setTimeout(() => {
       this.resetPair(blocksMatch);
       this.pairTimerRunning = false;

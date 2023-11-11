@@ -75,8 +75,8 @@ class BlockElement {
         divElement.classList.add("block", "flip-container");
         const flipper = ImprovedElementCreator.createElement(ElementType.DIV);
         flipper.classList.add("flipper");
-        const front = ImprovedElementCreator.createElement(ElementType.DIV, 'front');
-        const back = ImprovedElementCreator.createElement(ElementType.DIV, 'back');
+        const front = ImprovedElementCreator.createElement(ElementType.DIV, "front");
+        const back = ImprovedElementCreator.createElement(ElementType.DIV, "back");
         flipper.appendChild(front);
         flipper.appendChild(back);
         divElement.appendChild(flipper);
@@ -93,21 +93,27 @@ class BlockElement {
     }
     open() {
         var _a;
-        const back = this.div.querySelector('.back');
+        const back = this.div.querySelector(".back");
         if (back) {
             back.appendChild(this.figure.getImgElementRef());
         }
-        (_a = this.div.querySelector('.flipper')) === null || _a === void 0 ? void 0 : _a.classList.toggle('flip');
+        (_a = this.div.querySelector(".flipper")) === null || _a === void 0 ? void 0 : _a.classList.toggle("flip");
     }
     reset(match) {
-        const back = this.div.querySelector('.back');
+        const flipper = this.div.querySelector(".flipper");
+        const back = this.div.querySelector(".back");
         if (match) {
             this.div.style.border = "green 2px solid";
             this.div.removeEventListener("click", this.clickHandler);
         }
         else {
+            // Remove the figure's image from the back
             if (back && back.contains(this.figure.getImgElementRef())) {
                 back.removeChild(this.figure.getImgElementRef());
+            }
+            // Reverse the flip animation if the block is currently flipped
+            if (flipper && flipper.classList.contains("flip")) {
+                flipper.classList.remove("flip");
             }
         }
     }
@@ -135,7 +141,8 @@ class Board {
         this.limit = 2;
         this.openedBlocks = [];
         this.blocks = [];
-        document.body.style.backgroundImage = "url(./images/backgrounds/containersBgSmaller.jpg)";
+        document.body.style.backgroundImage =
+            "url(./images/backgrounds/containersBgSmaller.jpg)";
         const blocksArray = this.createBlockArray();
         for (let i = 0; i < settings.size; i++) {
             this.blocks[i] = [];
