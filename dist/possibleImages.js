@@ -14,6 +14,8 @@ export const fields = [
     "horse",
     "kangaroo",
     "squirrel",
-    "zebra"
+    "zebra",
+    "hippo",
+    "tiger"
 ];
 //# sourceMappingURL=possibleImages.js.map

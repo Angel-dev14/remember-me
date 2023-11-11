@@ -167,12 +167,6 @@ body {
   }
 }
 
-@media screen and (max-width: 1350px) {
-  #statsAndOptions {
-    position: static !important;
-  }
-}
-
 #gameoverMessage {
   text-align: center;
   font-family: "Sedgwick Ave Display", cursive;
@@ -250,12 +244,6 @@ body {
   display: block;
   background-color: var(--orange);
   margin-top: 3em;
-}
-
-#statsAndOptions {
-  position: absolute;
-  left: 1em;
-  top: 4em;
 }
 
 .quit-game {
