@@ -5,6 +5,11 @@ var Difficulties;
     Difficulties["MEDIUM"] = "MEDIUM";
     Difficulties["HARD"] = "HARD";
 })(Difficulties || (Difficulties = {}));
+const DifficultySettings = {
+    [Difficulties.EASY]: { gameLength: 5, timeoutSpeed: 2000, size: 2 },
+    [Difficulties.MEDIUM]: { gameLength: 5, timeoutSpeed: 1500, size: 4 },
+    [Difficulties.HARD]: { gameLength: 3, timeoutSpeed: 1000, size: 6 },
+};
 class Animation {
     constructor(elementRef) {
         this.headingElementRef = elementRef;
@@ -134,11 +139,51 @@ class Figure {
         return this.img;
     }
 }
+class Timer {
+    constructor(updateTimeCallback) {
+        this.intervalId = null;
+        this.seconds = 0;
+        this.updateTimeCallback = updateTimeCallback;
+    }
+    startTimer(gameLength) {
+        this.seconds = gameLength * 60;
+        this.updateTime();
+        this.intervalId = window.setInterval(() => {
+            this.seconds--;
+            let color;
+            switch (this.seconds) {
+                case 59:
+                    color = "#ffb703";
+                    break;
+                case 30:
+                    color = "#e63946";
+                    break;
+            }
+            this.updateTime(color);
+            if (this.seconds <= 0) {
+                this.stopTimer();
+            }
+        }, 1000);
+    }
+    stopTimer() {
+        if (this.intervalId !== null) {
+            clearInterval(this.intervalId);
+            this.intervalId = null;
+        }
+    }
+    updateTime(color) {
+        const minutes = Math.floor(this.seconds / 60);
+        const remainingSeconds = this.seconds % 60;
+        const timeString = `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+        this.updateTimeCallback(timeString, color);
+    }
+}
 class Board {
     constructor(settings) {
         this.matchedPairs = 0;
         this.pairTimerRunning = false;
         this.gameTimeRef = document.getElementById("gameTimer");
+        this.timer = new Timer(this.updateTimeDisplay.bind(this));
         this.settings = settings;
         this.size = settings.size;
         this.boardSize = settings.size * settings.size;
@@ -155,29 +200,13 @@ class Board {
                 this.blocks[i][j] = blocksArray[i * settings.size + j];
             }
         }
-        this.startTimer(settings.timer);
     }
-    startTimer(timer) {
-        // This should be a class perhaps, to handle Timers
-        let seconds = timer * 60; // Convert minutes to seconds
-        this.gameTimeRef.textContent = `${timer}:00`;
-        const intervalId = setInterval(() => {
-            seconds--;
-            switch (seconds) {
-                case 59:
-                    this.gameTimeRef.style.color = "#ffb703";
-                    break;
-                case 30:
-                    this.gameTimeRef.style.color = "#e63946";
-                    break;
-            }
-            const minutes = Math.floor(seconds / 60);
-            const remainingSeconds = seconds % 60;
-            this.gameTimeRef.textContent = `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
-            if (seconds <= 0) {
-                clearInterval(intervalId); // Stop the timer when it reaches 0
-            }
-        }, 1000);
+    updateTimeDisplay(timeString, color) {
+        // Update your time display element here
+        this.gameTimeRef.textContent = timeString;
+        if (color) {
+            this.gameTimeRef.style.color = color;
+        }
     }
     openBlock(block) {
         if (this.pairTimerRunning) {
@@ -214,10 +243,10 @@ class Board {
         }
     }
     gameOver() {
+        this.timer.stopTimer();
         const gameOverHeadingRef = document.getElementById("gameoverMessage");
         const confettiAnimation = new ConfettiAnimation(gameOverHeadingRef);
         confettiAnimation.start();
-        // TODO clear
         setTimeout(() => confettiAnimation.stop(), 6000);
     }
     createBlockArray() {
@@ -263,14 +292,13 @@ class Board {
             this.container.appendChild(row);
         }
     }
+    startGame(gameLength) {
+        this.timer.startTimer(gameLength);
+    }
 }
-const DifficultySettings = {
-    [Difficulties.EASY]: { timer: 5, timeoutSpeed: 2000, size: 2 },
-    [Difficulties.MEDIUM]: { timer: 5, timeoutSpeed: 1500, size: 4 },
-    [Difficulties.HARD]: { timer: 3, timeoutSpeed: 1000, size: 6 },
-};
 const urlParams = new URLSearchParams(window.location.search);
 const gameMode = urlParams.get("gameMode");
 const gameBoard = new Board(DifficultySettings[gameMode]);
 gameBoard.draw();
+gameBoard.startGame(DifficultySettings[gameMode].gameLength);
 //# sourceMappingURL=main.js.map

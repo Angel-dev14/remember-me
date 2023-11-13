@@ -1,7 +1,7 @@
 import { fields } from "./possibleImages.js";
 
 type BoardSettings = {
-  timer: number;
+  gameLength: number;
   timeoutSpeed: number;
   size: number;
 };
@@ -11,6 +11,14 @@ enum Difficulties {
   MEDIUM = "MEDIUM",
   HARD = "HARD",
 }
+
+const DifficultySettings: {
+  [key in Difficulties]: { gameLength: number; timeoutSpeed: number; size: number };
+} = {
+  [Difficulties.EASY]: { gameLength: 5, timeoutSpeed: 2000, size: 2 },
+  [Difficulties.MEDIUM]: { gameLength: 5, timeoutSpeed: 1500, size: 4 },
+  [Difficulties.HARD]: { gameLength: 3, timeoutSpeed: 1000, size: 6 },
+};
 
 abstract class Animation {
   protected headingElementRef: HTMLElement;
@@ -209,6 +217,56 @@ class Figure {
   }
 }
 
+class Timer {
+  private intervalId: number | null = null;
+  private seconds = 0;
+  private updateTimeCallback: (timeString: string, color?: string) => void;
+
+  constructor(updateTimeCallback: (timeString: string, color?: string) => void) {
+    this.updateTimeCallback = updateTimeCallback;
+  }
+
+  startTimer(gameLength: number): void {
+    this.seconds = gameLength * 60;
+    this.updateTime();
+
+    this.intervalId = window.setInterval(() => {
+      this.seconds--;
+
+      let color: string | undefined;
+      switch (this.seconds) {
+        case 59:
+          color = "#ffb703";
+          break;
+        case 30:
+          color = "#e63946";
+          break;
+      }
+
+      this.updateTime(color);
+
+      if (this.seconds <= 0) {
+        this.stopTimer();
+      }
+    }, 1000);
+  }
+
+  stopTimer(): void {
+    if (this.intervalId !== null) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
+  }
+
+  private updateTime(color?: string): void {
+    const minutes = Math.floor(this.seconds / 60);
+    const remainingSeconds = this.seconds % 60;
+    const timeString = `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+    this.updateTimeCallback(timeString, color);
+  }
+}
+
+
 class Board {
   private readonly blocks: BlockElement[][];
   private readonly container;
@@ -219,12 +277,15 @@ class Board {
   private matchedPairs: number = 0;
   private pairTimerRunning: boolean = false;
   private gameTimeRef: HTMLParagraphElement;
+  private timer: Timer;
   private settings: BoardSettings;
+
 
   constructor(settings: BoardSettings) {
     this.gameTimeRef = document.getElementById(
       "gameTimer"
     ) as HTMLParagraphElement;
+    this.timer = new Timer(this.updateTimeDisplay.bind(this));
     this.settings = settings;
     this.size = settings.size;
     this.boardSize = settings.size * settings.size;
@@ -242,37 +303,14 @@ class Board {
         this.blocks[i][j] = blocksArray[i * settings.size + j];
       }
     }
-    this.startTimer(settings.timer);
   }
 
-  startTimer(timer: number) {
-    // This should be a class perhaps, to handle Timers
-    let seconds = timer * 60; // Convert minutes to seconds
-    this.gameTimeRef.textContent = `${timer}:00`;
-
-    const intervalId = setInterval(() => {
-      seconds--;
-
-      switch (seconds) {
-        case 59:
-          this.gameTimeRef.style.color = "#ffb703";
-          break;
-        case 30:
-          this.gameTimeRef.style.color = "#e63946";
-          break;
-      }
-
-      const minutes = Math.floor(seconds / 60);
-      const remainingSeconds = seconds % 60;
-
-      this.gameTimeRef.textContent = `${minutes}:${
-        remainingSeconds < 10 ? "0" : ""
-      }${remainingSeconds}`;
-
-      if (seconds <= 0) {
-        clearInterval(intervalId); // Stop the timer when it reaches 0
-      }
-    }, 1000);
+  private updateTimeDisplay(timeString: string, color?: string): void {
+    // Update your time display element here
+    this.gameTimeRef.textContent = timeString;
+    if (color) {
+      this.gameTimeRef.style.color = color;
+    }
   }
 
   openBlock(block: BlockElement) {
@@ -316,12 +354,12 @@ class Board {
   }
 
   gameOver() {
+    this.timer.stopTimer();
     const gameOverHeadingRef = document.getElementById("gameoverMessage");
     const confettiAnimation = new ConfettiAnimation(
       gameOverHeadingRef as HTMLHeadingElement
     );
     confettiAnimation.start();
-    // TODO clear
     setTimeout(() => confettiAnimation.stop(), 6000);
   }
 
@@ -376,17 +414,15 @@ class Board {
       this.container.appendChild(row);
     }
   }
+  startGame(gameLength: number): void {
+    this.timer.startTimer(gameLength);
+  }
 }
 
-const DifficultySettings: {
-  [key in Difficulties]: { timer: number; timeoutSpeed: number; size: number };
-} = {
-  [Difficulties.EASY]: { timer: 5, timeoutSpeed: 2000, size: 2 },
-  [Difficulties.MEDIUM]: { timer: 5, timeoutSpeed: 1500, size: 4 },
-  [Difficulties.HARD]: { timer: 3, timeoutSpeed: 1000, size: 6 },
-};
+
 
 const urlParams = new URLSearchParams(window.location.search);
 const gameMode = urlParams.get("gameMode") as Difficulties;
 const gameBoard = new Board(DifficultySettings[gameMode]);
 gameBoard.draw();
+gameBoard.startGame(DifficultySettings[gameMode].gameLength);
