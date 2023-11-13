@@ -209,14 +209,14 @@ body {
   transform: rotateY(180deg);
 }
 
-.confetti {
+.game-over-fall {
   position: fixed;
   top: 0;
   font-size: 1.6rem;
-  animation: confetti-fall linear 5s infinite;
+  animation: game-over-fall linear 5s infinite;
 }
 
-@keyframes confetti-fall {
+@keyframes game-over-fall {
   0% {
     transform: translateY(-100%) rotate(0);
   }
@@ -256,6 +256,7 @@ body {
   text-align: center;
   font-family: "Sedgwick Ave Display", cursive;
   font-size: 4em;
+  margin: 0.5em 0;
 }
 
 #gameTimer {

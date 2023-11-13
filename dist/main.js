@@ -1,4 +1,5 @@
 import { fields } from "./possibleImages.js";
+const ANIMATION_LENGTH = 6000;
 var Difficulties;
 (function (Difficulties) {
     Difficulties["EASY"] = "EASY";
@@ -12,15 +13,8 @@ const DifficultySettings = {
 };
 class Animation {
     constructor(elementRef) {
-        this.headingElementRef = elementRef;
-    }
-}
-class ConfettiAnimation extends Animation {
-    constructor(headingElementRef) {
         var _a;
-        super(headingElementRef);
-        this.confettiArray = [];
-        this.confettiCount = 200;
+        this.headingElementRef = elementRef;
         this.parentContainerRef = document.getElementById("gameoverParent");
         (_a = this.parentContainerRef
             .querySelector(".gameover-x-mark")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => {
@@ -28,22 +22,48 @@ class ConfettiAnimation extends Animation {
             this.headingElementRef.textContent = "";
         });
     }
-    start() {
-        for (let i = 0; i < this.confettiCount; i++) {
-            const confetti = ImprovedElementCreator.createElement(ElementType.DIV, "confetti", undefined, "🎉");
-            confetti.style.left = `${Math.random() * 100}vw`;
-            confetti.style.animationDuration = `${Math.random() * 2 + 3}s`;
-            this.confettiArray.push(confetti);
-            document.body.appendChild(confetti);
+    animateElements(emoji, finalMessage, count) {
+        const elementsArray = [];
+        for (let i = 0; i < count; i++) {
+            const element = ImprovedElementCreator.createElement(ElementType.DIV, "game-over-fall", undefined, emoji);
+            element.style.left = `${Math.random() * 100}vw`;
+            element.style.animationDuration = `${Math.random() * 2 + 3}s`;
+            elementsArray.push(element);
+            document.body.appendChild(element);
         }
+        setTimeout(() => {
+            this.parentContainerRef.style.display = "flex";
+            this.headingElementRef.textContent = finalMessage;
+        }, ANIMATION_LENGTH);
+        return elementsArray;
+    }
+}
+class ConfettiAnimation extends Animation {
+    constructor(headingElementRef) {
+        super(headingElementRef);
+        this.confettiArray = [];
+        this.confettiCount = 200;
+    }
+    start() {
+        this.confettiArray = this.animateElements("🎉", "You won", this.confettiCount);
     }
     stop() {
-        this.confettiArray.forEach((confetti) => {
-            confetti.remove();
-        });
+        this.confettiArray.forEach((confetti) => confetti.remove());
         this.confettiArray = [];
-        this.parentContainerRef.style.display = "flex";
-        this.headingElementRef.textContent = "You won";
+    }
+}
+class TimeOutAnimation extends Animation {
+    constructor(headingElementRef) {
+        super(headingElementRef);
+        this.gameOverElements = [];
+        this.elementCount = 200;
+    }
+    start() {
+        this.gameOverElements = this.animateElements("⏰", "Time's Up!", this.elementCount);
+    }
+    stop() {
+        this.gameOverElements.forEach((element) => element.remove());
+        this.gameOverElements = [];
     }
 }
 var ElementType;
@@ -202,10 +222,12 @@ class Board {
         }
     }
     updateTimeDisplay(timeString, color) {
-        // Update your time display element here
         this.gameTimeRef.textContent = timeString;
         if (color) {
             this.gameTimeRef.style.color = color;
+        }
+        if (timeString === "0:00") {
+            this.gameOver("timeOut");
         }
     }
     openBlock(block) {
@@ -238,16 +260,25 @@ class Board {
         if (blocksMatch) {
             this.matchedPairs++;
             if (this.matchedPairs === this.boardSize / 2) {
-                this.gameOver();
+                this.gameOver("victory");
             }
         }
     }
-    gameOver() {
+    gameOver(src) {
         this.timer.stopTimer();
         const gameOverHeadingRef = document.getElementById("gameoverMessage");
-        const confettiAnimation = new ConfettiAnimation(gameOverHeadingRef);
-        confettiAnimation.start();
-        setTimeout(() => confettiAnimation.stop(), 6000);
+        switch (src) {
+            case "victory":
+                const confettiAnimation = new ConfettiAnimation(gameOverHeadingRef);
+                confettiAnimation.start();
+                setTimeout(() => confettiAnimation.stop(), ANIMATION_LENGTH);
+                break;
+            case "timeOut":
+                const timeOutAnimation = new TimeOutAnimation(gameOverHeadingRef);
+                timeOutAnimation.start();
+                setTimeout(() => timeOutAnimation.stop(), ANIMATION_LENGTH);
+                break;
+        }
     }
     createBlockArray() {
         let blocksArray = [];
@@ -293,12 +324,12 @@ class Board {
         }
     }
     startGame(gameLength) {
+        this.draw();
         this.timer.startTimer(gameLength);
     }
 }
 const urlParams = new URLSearchParams(window.location.search);
 const gameMode = urlParams.get("gameMode");
 const gameBoard = new Board(DifficultySettings[gameMode]);
-gameBoard.draw();
 gameBoard.startGame(DifficultySettings[gameMode].gameLength);
 //# sourceMappingURL=main.js.map

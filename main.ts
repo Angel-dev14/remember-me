@@ -1,4 +1,5 @@
 import { fields } from "./possibleImages.js";
+const ANIMATION_LENGTH = 6000;
 
 type BoardSettings = {
   gameLength: number;
@@ -13,7 +14,11 @@ enum Difficulties {
 }
 
 const DifficultySettings: {
-  [key in Difficulties]: { gameLength: number; timeoutSpeed: number; size: number };
+  [key in Difficulties]: {
+    gameLength: number;
+    timeoutSpeed: number;
+    size: number;
+  };
 } = {
   [Difficulties.EASY]: { gameLength: 5, timeoutSpeed: 2000, size: 2 },
   [Difficulties.MEDIUM]: { gameLength: 5, timeoutSpeed: 1500, size: 4 },
@@ -22,23 +27,10 @@ const DifficultySettings: {
 
 abstract class Animation {
   protected headingElementRef: HTMLElement;
+  protected parentContainerRef: HTMLDivElement;
 
   protected constructor(elementRef: HTMLElement) {
     this.headingElementRef = elementRef;
-  }
-
-  abstract start(): void;
-
-  abstract stop(): void;
-}
-
-class ConfettiAnimation extends Animation {
-  private confettiArray: HTMLElement[] = [];
-  private confettiCount = 200;
-  private parentContainerRef: HTMLDivElement;
-
-  constructor(headingElementRef: HTMLElement) {
-    super(headingElementRef);
     this.parentContainerRef = document.getElementById(
       "gameoverParent"
     ) as HTMLDivElement;
@@ -50,28 +42,78 @@ class ConfettiAnimation extends Animation {
       });
   }
 
-  start() {
-    for (let i = 0; i < this.confettiCount; i++) {
-      const confetti = ImprovedElementCreator.createElement(
+  abstract start(): void;
+
+  abstract stop(): void;
+
+  protected animateElements(
+    emoji: string,
+    finalMessage: string,
+    count: number
+  ) {
+    const elementsArray: HTMLElement[] = [];
+    for (let i = 0; i < count; i++) {
+      const element = ImprovedElementCreator.createElement(
         ElementType.DIV,
-        "confetti",
+        "game-over-fall",
         undefined,
-        "🎉"
+        emoji
       ) as HTMLDivElement;
-      confetti.style.left = `${Math.random() * 100}vw`;
-      confetti.style.animationDuration = `${Math.random() * 2 + 3}s`;
-      this.confettiArray.push(confetti);
-      document.body.appendChild(confetti);
+      element.style.left = `${Math.random() * 100}vw`;
+      element.style.animationDuration = `${Math.random() * 2 + 3}s`;
+      elementsArray.push(element);
+      document.body.appendChild(element);
     }
+    setTimeout(() => {
+      this.parentContainerRef.style.display = "flex";
+      this.headingElementRef.textContent = finalMessage;
+    }, ANIMATION_LENGTH);
+
+    return elementsArray;
+  }
+}
+
+class ConfettiAnimation extends Animation {
+  private confettiArray: HTMLElement[] = [];
+  private confettiCount = 200;
+
+  constructor(headingElementRef: HTMLHeadingElement) {
+    super(headingElementRef);
+  }
+
+  start() {
+    this.confettiArray = this.animateElements(
+      "🎉",
+      "You won",
+      this.confettiCount
+    );
   }
 
   stop() {
-    this.confettiArray.forEach((confetti) => {
-      confetti.remove();
-    });
+    this.confettiArray.forEach((confetti) => confetti.remove());
     this.confettiArray = [];
-    this.parentContainerRef.style.display = "flex";
-    this.headingElementRef.textContent = "You won";
+  }
+}
+
+class TimeOutAnimation extends Animation {
+  private gameOverElements: HTMLElement[] = [];
+  private elementCount = 200;
+
+  constructor(headingElementRef: HTMLHeadingElement) {
+    super(headingElementRef);
+  }
+
+  start() {
+    this.gameOverElements = this.animateElements(
+      "⏰",
+      "Time's Up!",
+      this.elementCount
+    );
+  }
+
+  stop() {
+    this.gameOverElements.forEach((element) => element.remove());
+    this.gameOverElements = [];
   }
 }
 
@@ -222,7 +264,9 @@ class Timer {
   private seconds = 0;
   private updateTimeCallback: (timeString: string, color?: string) => void;
 
-  constructor(updateTimeCallback: (timeString: string, color?: string) => void) {
+  constructor(
+    updateTimeCallback: (timeString: string, color?: string) => void
+  ) {
     this.updateTimeCallback = updateTimeCallback;
   }
 
@@ -261,11 +305,12 @@ class Timer {
   private updateTime(color?: string): void {
     const minutes = Math.floor(this.seconds / 60);
     const remainingSeconds = this.seconds % 60;
-    const timeString = `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+    const timeString = `${minutes}:${
+      remainingSeconds < 10 ? "0" : ""
+    }${remainingSeconds}`;
     this.updateTimeCallback(timeString, color);
   }
 }
-
 
 class Board {
   private readonly blocks: BlockElement[][];
@@ -279,7 +324,6 @@ class Board {
   private gameTimeRef: HTMLParagraphElement;
   private timer: Timer;
   private settings: BoardSettings;
-
 
   constructor(settings: BoardSettings) {
     this.gameTimeRef = document.getElementById(
@@ -306,10 +350,12 @@ class Board {
   }
 
   private updateTimeDisplay(timeString: string, color?: string): void {
-    // Update your time display element here
     this.gameTimeRef.textContent = timeString;
     if (color) {
       this.gameTimeRef.style.color = color;
+    }
+    if (timeString === "0:00") {
+      this.gameOver("timeOut");
     }
   }
 
@@ -348,19 +394,28 @@ class Board {
     if (blocksMatch) {
       this.matchedPairs++;
       if (this.matchedPairs === this.boardSize / 2) {
-        this.gameOver();
+        this.gameOver("victory");
       }
     }
   }
 
-  gameOver() {
+  gameOver(src: string) {
     this.timer.stopTimer();
     const gameOverHeadingRef = document.getElementById("gameoverMessage");
-    const confettiAnimation = new ConfettiAnimation(
-      gameOverHeadingRef as HTMLHeadingElement
-    );
-    confettiAnimation.start();
-    setTimeout(() => confettiAnimation.stop(), 6000);
+    switch (src) {
+      case "victory":
+        const confettiAnimation = new ConfettiAnimation(
+          gameOverHeadingRef as HTMLHeadingElement
+        );
+        confettiAnimation.start();
+        setTimeout(() => confettiAnimation.stop(), ANIMATION_LENGTH);
+        break;
+      case "timeOut":
+        const timeOutAnimation = new TimeOutAnimation(gameOverHeadingRef);
+        timeOutAnimation.start();
+        setTimeout(() => timeOutAnimation.stop(), ANIMATION_LENGTH);
+        break;
+    }
   }
 
   createBlockArray(): BlockElement[] {
@@ -415,14 +470,12 @@ class Board {
     }
   }
   startGame(gameLength: number): void {
+    this.draw();
     this.timer.startTimer(gameLength);
   }
 }
 
-
-
 const urlParams = new URLSearchParams(window.location.search);
 const gameMode = urlParams.get("gameMode") as Difficulties;
 const gameBoard = new Board(DifficultySettings[gameMode]);
-gameBoard.draw();
 gameBoard.startGame(DifficultySettings[gameMode].gameLength);
