@@ -13,10 +13,10 @@ enum Difficulties {
 }
 
 abstract class Animation {
-  protected elementRef: HTMLElement;
+  protected headingElementRef: HTMLElement;
 
   protected constructor(elementRef: HTMLElement) {
-    this.elementRef = elementRef;
+    this.headingElementRef = elementRef;
   }
 
   abstract start(): void;
@@ -27,9 +27,19 @@ abstract class Animation {
 class ConfettiAnimation extends Animation {
   private confettiArray: HTMLElement[] = [];
   private confettiCount = 200;
+  private parentContainerRef: HTMLDivElement;
 
   constructor(headingElementRef: HTMLElement) {
     super(headingElementRef);
+    this.parentContainerRef = document.getElementById(
+      "gameoverParent"
+    ) as HTMLDivElement;
+    this.parentContainerRef
+      .querySelector(".gameover-x-mark")
+      ?.addEventListener("click", () => {
+        this.parentContainerRef.style.display = "none";
+        this.headingElementRef.textContent = "";
+      });
   }
 
   start() {
@@ -44,16 +54,16 @@ class ConfettiAnimation extends Animation {
       confetti.style.animationDuration = `${Math.random() * 2 + 3}s`;
       this.confettiArray.push(confetti);
       document.body.appendChild(confetti);
-      this.elementRef.textContent = "You Won";
     }
   }
 
   stop() {
-    this.elementRef.textContent = "";
     this.confettiArray.forEach((confetti) => {
       confetti.remove();
     });
     this.confettiArray = [];
+    this.parentContainerRef.style.display = "flex";
+    this.headingElementRef.textContent = "You won";
   }
 }
 
@@ -66,7 +76,7 @@ class ImprovedElementCreator {
   static createElement(
     elementType: ElementType,
     classes?: string | string[],
-    size?: [number, number ],
+    size?: [number, number],
     textContent?: string
   ) {
     const element = document.createElement(elementType);

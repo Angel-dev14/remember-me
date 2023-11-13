@@ -100,6 +100,19 @@ body {
   background-image: url("images/soundSettings/soundsOff.png");
 }
 
+.modal-parent {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%; 
+  height: 100%; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center;
+  backdrop-filter: blur(5px);
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000; 
+}
 .container {
   display: flex;
   align-items: center;
@@ -335,10 +348,22 @@ body {
   background-color: var(--orange);
 }
 
-.red-x-mark {
+.red-x-mark, .gameover-x-mark {
   color: red;
   font-size: 2em;
   margin-right: 0.3em;
+}
+
+.gameover-x-mark {
+  position: relative;
+  left: 3em;
+  padding: 0.1em 0.2em;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.gameover-x-mark:hover {
+  background-color: var(--yellowish-orange);
 }
 
 .row-bottom {

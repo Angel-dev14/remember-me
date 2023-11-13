@@ -7,14 +7,21 @@ var Difficulties;
 })(Difficulties || (Difficulties = {}));
 class Animation {
     constructor(elementRef) {
-        this.elementRef = elementRef;
+        this.headingElementRef = elementRef;
     }
 }
 class ConfettiAnimation extends Animation {
     constructor(headingElementRef) {
+        var _a;
         super(headingElementRef);
         this.confettiArray = [];
         this.confettiCount = 200;
+        this.parentContainerRef = document.getElementById("gameoverParent");
+        (_a = this.parentContainerRef
+            .querySelector(".gameover-x-mark")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => {
+            this.parentContainerRef.style.display = "none";
+            this.headingElementRef.textContent = "";
+        });
     }
     start() {
         for (let i = 0; i < this.confettiCount; i++) {
@@ -23,15 +30,15 @@ class ConfettiAnimation extends Animation {
             confetti.style.animationDuration = `${Math.random() * 2 + 3}s`;
             this.confettiArray.push(confetti);
             document.body.appendChild(confetti);
-            this.elementRef.textContent = "You Won";
         }
     }
     stop() {
-        this.elementRef.textContent = "";
         this.confettiArray.forEach((confetti) => {
             confetti.remove();
         });
         this.confettiArray = [];
+        this.parentContainerRef.style.display = "flex";
+        this.headingElementRef.textContent = "You won";
     }
 }
 var ElementType;
