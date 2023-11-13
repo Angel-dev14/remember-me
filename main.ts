@@ -159,8 +159,6 @@ class ImprovedElementCreator {
 
 class BlockElement {
   private readonly name: string;
-  private readonly width: number;
-  private readonly height: number;
   private readonly figure: Figure;
   private readonly div: HTMLDivElement;
   private readonly onClick?: (block: BlockElement) => void;
@@ -168,14 +166,10 @@ class BlockElement {
 
   constructor(
     name: string,
-    width: number,
-    height: number,
     figure: Figure,
     onClick: (block: BlockElement) => void
   ) {
     this.name = name;
-    this.width = width;
-    this.height = height;
     this.figure = figure;
     this.onClick = onClick;
     this.div = this.createBlock();
@@ -188,7 +182,6 @@ class BlockElement {
     const divElement = ImprovedElementCreator.createElement(
       ElementType.DIV,
       ["block", "flip-container"],
-      [100, 100]
     ) as HTMLDivElement;
 
     const flipper = ImprovedElementCreator.createElement(
@@ -438,8 +431,6 @@ class Board {
       const figure = new Figure(link);
       const block = new BlockElement(
         "block",
-        100,
-        100,
         figure,
         this.openBlock.bind(this)
       );

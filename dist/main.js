@@ -100,10 +100,8 @@ class ImprovedElementCreator {
     }
 }
 class BlockElement {
-    constructor(name, width, height, figure, onClick) {
+    constructor(name, figure, onClick) {
         this.name = name;
-        this.width = width;
-        this.height = height;
         this.figure = figure;
         this.onClick = onClick;
         this.div = this.createBlock();
@@ -112,7 +110,7 @@ class BlockElement {
         this.div.addEventListener("click", this.clickHandler);
     }
     createBlock() {
-        const divElement = ImprovedElementCreator.createElement(ElementType.DIV, ["block", "flip-container"], [100, 100]);
+        const divElement = ImprovedElementCreator.createElement(ElementType.DIV, ["block", "flip-container"]);
         const flipper = ImprovedElementCreator.createElement(ElementType.DIV, "flipper");
         const front = ImprovedElementCreator.createElement(ElementType.DIV, "front");
         const back = ImprovedElementCreator.createElement(ElementType.DIV, "back");
@@ -296,7 +294,7 @@ class Board {
             const field = fields[0];
             const link = `images/AnimalsNew/${field}.png`;
             const figure = new Figure(link);
-            const block = new BlockElement("block", 100, 100, figure, this.openBlock.bind(this));
+            const block = new BlockElement("block", figure, this.openBlock.bind(this));
             blocksArray.push(block);
             if (addedFields[field] == 1) {
                 addedFields[field] = addedFields[field] + 1;

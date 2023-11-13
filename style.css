@@ -164,6 +164,9 @@ body {
   margin: 0.5em;
   cursor: pointer;
   perspective: 1000px;
+  width: 100px;
+  height: 100px;
+  box-sizing: border-box;
 }
 
 .match {
