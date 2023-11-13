@@ -1,5 +1,6 @@
 import { fields } from "./possibleImages.js";
 const ANIMATION_LENGTH = 6000;
+const BLOCK_OPEN_ANIMATION_LENGTH = 600;
 
 type BoardSettings = {
   gameLength: number;
@@ -235,7 +236,7 @@ class BlockElement {
         this.div.classList.toggle("notMatch");
         setTimeout(() => {
           back.removeChild(this.figure.getImgElementRef());
-        }, 600);
+        }, BLOCK_OPEN_ANIMATION_LENGTH);
       }
     }
   }
@@ -385,7 +386,7 @@ class Board {
         this.openedBlocks.forEach((b) =>
           b.getDivElementRef().classList.toggle("notMatch")
         );
-      }, 600);
+      }, BLOCK_OPEN_ANIMATION_LENGTH);
     setTimeout(() => {
       this.resetPair(blocksMatch);
       this.pairTimerRunning = false;

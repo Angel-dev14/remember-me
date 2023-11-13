@@ -1,5 +1,6 @@
 import { fields } from "./possibleImages.js";
 const ANIMATION_LENGTH = 6000;
+const BLOCK_OPEN_ANIMATION_LENGTH = 600;
 var Difficulties;
 (function (Difficulties) {
     Difficulties["EASY"] = "EASY";
@@ -150,7 +151,7 @@ class BlockElement {
                 this.div.classList.toggle("notMatch");
                 setTimeout(() => {
                     back.removeChild(this.figure.getImgElementRef());
-                }, 600);
+                }, BLOCK_OPEN_ANIMATION_LENGTH);
             }
         }
     }
@@ -258,7 +259,7 @@ class Board {
         !blocksMatch &&
             setTimeout(() => {
                 this.openedBlocks.forEach((b) => b.getDivElementRef().classList.toggle("notMatch"));
-            }, 600);
+            }, BLOCK_OPEN_ANIMATION_LENGTH);
         setTimeout(() => {
             this.resetPair(blocksMatch);
             this.pairTimerRunning = false;
