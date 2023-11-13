@@ -8,13 +8,15 @@ export const Header = class Header extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
     <div class="header">
+    <div class="spacer"></div>
     <div class="logo-title">
+    <a class='logo' href="http://127.0.0.1:5500/Websites/Lesson%202%20-%20Memory%20Game/remember-me/">
+            <img class='logo' src="./images/logo/logo.png" alt="header logo" width="50px" heigth="auto">
+          </a>
       <div class="title">
         <p>Remember Me</p>
       </div>
-          <a class='logo' href="http://127.0.0.1:5500/Websites/Lesson%202%20-%20Memory%20Game/remember-me/">
-            <img class='logo' src="./images/logo/logo.png" alt="header logo" width="50px" heigth="auto">
-          </a>
+          
           </div>
 
           <div class="header-buttons">
