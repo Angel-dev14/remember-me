@@ -67,6 +67,11 @@ abstract class Animation {
     setTimeout(() => {
       this.parentContainerRef.style.display = "flex";
       this.headingElementRef.textContent = finalMessage;
+      this.parentContainerRef.querySelector(".reset-btn")?.addEventListener("click", ()=> {
+        this.parentContainerRef.style.display = "none";
+        this.headingElementRef.textContent = "";
+        location.reload();
+      })
     }, ANIMATION_LENGTH);
 
     return elementsArray;
@@ -315,15 +320,16 @@ class Timer {
 class Board {
   private readonly blocks: BlockElement[][];
   private readonly container;
-  private limit: number;
+  private readonly limit: number;
   private openedBlocks: BlockElement[];
-  private boardSize: number;
-  private size: number;
+  private readonly boardSize: number;
+  private readonly size: number;
   private matchedPairs: number = 0;
   private pairTimerRunning: boolean = false;
   private gameTimeRef: HTMLParagraphElement;
-  private timer: Timer;
-  private settings: BoardSettings;
+  private readonly timer: Timer;
+  private readonly settings: BoardSettings;
+  private isGameActive = false;
 
   constructor(settings: BoardSettings) {
     this.gameTimeRef = document.getElementById(
@@ -360,7 +366,7 @@ class Board {
   }
 
   openBlock(block: BlockElement) {
-    if (this.pairTimerRunning) {
+    if (!this.isGameActive || this.pairTimerRunning) {
       return;
     } else if (
       !this.openedBlocks.includes(block) &&
@@ -401,6 +407,7 @@ class Board {
 
   gameOver(src: string) {
     this.timer.stopTimer();
+    this.isGameActive = false;
     const gameOverHeadingRef = document.getElementById("gameoverMessage");
     switch (src) {
       case "victory":
@@ -411,7 +418,9 @@ class Board {
         setTimeout(() => confettiAnimation.stop(), ANIMATION_LENGTH);
         break;
       case "timeOut":
-        const timeOutAnimation = new TimeOutAnimation(gameOverHeadingRef);
+        const timeOutAnimation = new TimeOutAnimation(
+          gameOverHeadingRef as HTMLHeadingElement
+        );
         timeOutAnimation.start();
         setTimeout(() => timeOutAnimation.stop(), ANIMATION_LENGTH);
         break;
@@ -470,6 +479,7 @@ class Board {
     }
   }
   startGame(gameLength: number): void {
+    this.isGameActive = true;
     this.draw();
     this.timer.startTimer(gameLength);
   }

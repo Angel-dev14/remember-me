@@ -32,8 +32,14 @@ class Animation {
             document.body.appendChild(element);
         }
         setTimeout(() => {
+            var _a;
             this.parentContainerRef.style.display = "flex";
             this.headingElementRef.textContent = finalMessage;
+            (_a = this.parentContainerRef.querySelector(".reset-btn")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => {
+                this.parentContainerRef.style.display = "none";
+                this.headingElementRef.textContent = "";
+                location.reload();
+            });
         }, ANIMATION_LENGTH);
         return elementsArray;
     }
@@ -202,6 +208,7 @@ class Board {
     constructor(settings) {
         this.matchedPairs = 0;
         this.pairTimerRunning = false;
+        this.isGameActive = false;
         this.gameTimeRef = document.getElementById("gameTimer");
         this.timer = new Timer(this.updateTimeDisplay.bind(this));
         this.settings = settings;
@@ -231,7 +238,7 @@ class Board {
         }
     }
     openBlock(block) {
-        if (this.pairTimerRunning) {
+        if (!this.isGameActive || this.pairTimerRunning) {
             return;
         }
         else if (!this.openedBlocks.includes(block) &&
@@ -266,6 +273,7 @@ class Board {
     }
     gameOver(src) {
         this.timer.stopTimer();
+        this.isGameActive = false;
         const gameOverHeadingRef = document.getElementById("gameoverMessage");
         switch (src) {
             case "victory":
@@ -324,6 +332,7 @@ class Board {
         }
     }
     startGame(gameLength) {
+        this.isGameActive = true;
         this.draw();
         this.timer.startTimer(gameLength);
     }
