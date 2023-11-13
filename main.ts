@@ -179,10 +179,10 @@ class BlockElement {
   }
 
   private createBlock(): HTMLDivElement {
-    const divElement = ImprovedElementCreator.createElement(
-      ElementType.DIV,
-      ["block", "flip-container"],
-    ) as HTMLDivElement;
+    const divElement = ImprovedElementCreator.createElement(ElementType.DIV, [
+      "block",
+      "flip-container",
+    ]) as HTMLDivElement;
 
     const flipper = ImprovedElementCreator.createElement(
       ElementType.DIV,
@@ -232,6 +232,7 @@ class BlockElement {
     } else {
       if (flipper && back) {
         flipper.classList.remove("flip");
+        this.div.classList.toggle("notMatch");
         setTimeout(() => {
           back.removeChild(this.figure.getImgElementRef());
         }, 600);
@@ -379,6 +380,12 @@ class Board {
       firstBlock.getFigureRef().src === secondBlock.getFigureRef().src;
     this.pairTimerRunning = true;
     const timer = blocksMatch ? 500 : this.settings.timeoutSpeed;
+    !blocksMatch &&
+      setTimeout(() => {
+        this.openedBlocks.forEach((b) =>
+          b.getDivElementRef().classList.toggle("notMatch")
+        );
+      }, 600);
     setTimeout(() => {
       this.resetPair(blocksMatch);
       this.pairTimerRunning = false;

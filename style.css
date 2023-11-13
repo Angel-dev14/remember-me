@@ -175,6 +175,12 @@ body {
   cursor: auto !important;
 }
 
+.notMatch {
+  border: var(--orange) 2px solid;
+  box-shadow: rgba(251, 131, 0, 0.4) 5px 5px;
+  cursor: auto !important;
+}
+
 .front {
   background-image: url("./images/blockBg/blockForeground.png");
   background-repeat: no-repeat;

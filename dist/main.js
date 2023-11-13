@@ -110,7 +110,10 @@ class BlockElement {
         this.div.addEventListener("click", this.clickHandler);
     }
     createBlock() {
-        const divElement = ImprovedElementCreator.createElement(ElementType.DIV, ["block", "flip-container"]);
+        const divElement = ImprovedElementCreator.createElement(ElementType.DIV, [
+            "block",
+            "flip-container",
+        ]);
         const flipper = ImprovedElementCreator.createElement(ElementType.DIV, "flipper");
         const front = ImprovedElementCreator.createElement(ElementType.DIV, "front");
         const back = ImprovedElementCreator.createElement(ElementType.DIV, "back");
@@ -144,6 +147,7 @@ class BlockElement {
         else {
             if (flipper && back) {
                 flipper.classList.remove("flip");
+                this.div.classList.toggle("notMatch");
                 setTimeout(() => {
                     back.removeChild(this.figure.getImgElementRef());
                 }, 600);
@@ -251,6 +255,10 @@ class Board {
         const blocksMatch = firstBlock.getFigureRef().src === secondBlock.getFigureRef().src;
         this.pairTimerRunning = true;
         const timer = blocksMatch ? 500 : this.settings.timeoutSpeed;
+        !blocksMatch &&
+            setTimeout(() => {
+                this.openedBlocks.forEach((b) => b.getDivElementRef().classList.toggle("notMatch"));
+            }, 600);
         setTimeout(() => {
             this.resetPair(blocksMatch);
             this.pairTimerRunning = false;
