@@ -20,7 +20,7 @@ const DifficultySettings: {
     size: number;
   };
 } = {
-  [Difficulties.EASY]: { gameLength: 5, timeoutSpeed: 2000, size: 2 },
+  [Difficulties.EASY]: { gameLength: 5, timeoutSpeed: 2000, size: 3 },
   [Difficulties.MEDIUM]: { gameLength: 5, timeoutSpeed: 1500, size: 4 },
   [Difficulties.HARD]: { gameLength: 3, timeoutSpeed: 1000, size: 6 },
 };
@@ -67,11 +67,11 @@ abstract class Animation {
     setTimeout(() => {
       this.parentContainerRef.style.display = "flex";
       this.headingElementRef.textContent = finalMessage;
-      this.parentContainerRef.querySelector(".reset-btn")?.addEventListener("click", ()=> {
-        this.parentContainerRef.style.display = "none";
-        this.headingElementRef.textContent = "";
-        location.reload();
-      })
+      this.parentContainerRef
+        .querySelector(".reset-btn")
+        ?.addEventListener("click", () => {
+          location.reload();
+        });
     }, ANIMATION_LENGTH);
 
     return elementsArray;
@@ -339,7 +339,7 @@ class Board {
     this.settings = settings;
     this.size = settings.size;
     this.boardSize = settings.size * settings.size;
-    this.container = document.querySelector(".container")!!;
+    this.container = document.querySelector("#blockContainer")!!;
     this.limit = 2;
     this.openedBlocks = [];
     this.blocks = [];
@@ -424,6 +424,10 @@ class Board {
         timeOutAnimation.start();
         setTimeout(() => timeOutAnimation.stop(), ANIMATION_LENGTH);
         break;
+      case "quit":
+        const baseUrl = window.location.href.split("/").slice(0, -1).join("/");
+        window.location.href = baseUrl;
+        break;
     }
   }
 
@@ -480,6 +484,10 @@ class Board {
   }
   startGame(gameLength: number): void {
     this.isGameActive = true;
+    const quitButtons = document.querySelectorAll(".quit-game");
+    quitButtons.forEach((button) => {
+      button.addEventListener("click", () => this.gameOver("quit"));
+    });
     this.draw();
     this.timer.startTimer(gameLength);
   }

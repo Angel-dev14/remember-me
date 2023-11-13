@@ -33,12 +33,15 @@
 
     <custom-header></custom-header>
 
-    <div class="container"></div>
+    <div class="container" id="blockContainer"></div>
     <div class="modal-parent" id="gameoverParent" style="display: none;">
       <div class="container">
         <i class="fa-solid fa-xmark gameover-x-mark"></i>
         <h2 id="gameoverMessage"></h2>
-        <button class="reset-btn"></button>
+        <div class="row">
+          <button class="quit-game"></button>
+          <button class="reset-btn"></button>
+        </div>
       </div>
     </div>
     <div class="row-bottom">
@@ -68,7 +71,6 @@
 
         <div class="row">
           <button class="quit-game">
-            <i class="fa-solid fa-xmark red-x-mark"></i>Cancel
           </button>
           <div class="column">
             <input
