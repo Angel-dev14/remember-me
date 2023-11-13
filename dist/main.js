@@ -133,16 +133,14 @@ class BlockElement {
     open() {
         var _a;
         const back = this.div.querySelector(".back");
-        if (back) {
-            back.appendChild(this.figure.getImgElementRef());
-        }
+        back && back.appendChild(this.figure.getImgElementRef());
         (_a = this.div.querySelector(".flipper")) === null || _a === void 0 ? void 0 : _a.classList.toggle("flip");
     }
     reset(match) {
         const flipper = this.div.querySelector(".flipper");
         const back = this.div.querySelector(".back");
         if (match) {
-            this.div.style.border = "green 2px solid";
+            this.div.classList.toggle("match");
             this.div.removeEventListener("click", this.clickHandler);
         }
         else {

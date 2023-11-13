@@ -225,9 +225,7 @@ class BlockElement {
 
   open() {
     const back = this.div.querySelector(".back");
-    if (back) {
-      back.appendChild(this.figure.getImgElementRef());
-    }
+    back && back.appendChild(this.figure.getImgElementRef());
     this.div.querySelector(".flipper")?.classList.toggle("flip");
   }
 
@@ -236,7 +234,7 @@ class BlockElement {
     const back = this.div.querySelector(".back");
 
     if (match) {
-      this.div.style.border = "green 2px solid";
+      this.div.classList.toggle("match");
       this.div.removeEventListener("click", this.clickHandler);
     } else {
       if (flipper && back) {

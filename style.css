@@ -5,6 +5,7 @@
   --yellowish-orange: #ffb703;
   --orange: #fb8500;
   --off-white: #f1faee;
+  --light-green: #a7c957;
 }
 body {
   background-image: url("./images/backgrounds/wallBgSmaller.jpg");
@@ -161,9 +162,14 @@ body {
 
 .container .block {
   margin: 0.5em;
-
   cursor: pointer;
   perspective: 1000px;
+}
+
+.match {
+  border: var(--light-green) 2px solid;
+  box-shadow: rgba(167, 201, 87, 0.4) 5px 5px;
+  cursor: auto !important;
 }
 
 .front {
