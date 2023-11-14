@@ -310,6 +310,28 @@ class Timer {
   }
 }
 
+type StatKey = "turnCount" | "matchCount" | "mismatchCount";
+
+class GameStats {
+  private turnCount: number = 0;
+  private matchCount: number = 0;
+  private mismatchCount: number = 0;
+
+  increment(stat: StatKey) {
+    this[stat] += 1;
+  }
+
+  get(stat: StatKey): number {
+    return this[stat];
+  }
+
+  resetStats() {
+    this.turnCount = 0;
+    this.matchCount = 0;
+    this.mismatchCount = 0;
+  }
+}
+
 class Board {
   private readonly blocks: BlockElement[][];
   private readonly container;
