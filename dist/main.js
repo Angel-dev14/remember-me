@@ -204,11 +204,42 @@ class Timer {
         this.updateTimeCallback(timeString, color);
     }
 }
+class GameStats {
+    constructor() {
+        this.turnCount = 0;
+        this.matchCount = 0;
+        this.missCount = 0;
+    }
+    increment(stat) {
+        this[stat] += 1;
+    }
+    get(stat) {
+        return this[stat];
+    }
+    resetStats() {
+        this.turnCount = 0;
+        this.matchCount = 0;
+        this.missCount = 0;
+    }
+}
+class GameUI {
+    constructor() {
+        this.turnCount = document.getElementById("turnCount");
+        this.matchCount = document.getElementById("matchCount");
+        this.missCount = document.getElementById("missCount");
+        this.accuracyPercentage = document.getElementById("accurarcyPercentage");
+    }
+    updateElementCount(count, element) {
+        this[element].textContent = count.toString();
+    }
+}
 class Board {
     constructor(settings) {
         this.matchedPairs = 0;
         this.pairTimerRunning = false;
         this.isGameActive = false;
+        this.gameStats = new GameStats();
+        this.gameUI = new GameUI();
         this.gameTimeRef = document.getElementById("gameTimer");
         this.timer = new Timer(this.updateTimeDisplay.bind(this));
         this.settings = settings;
@@ -247,6 +278,7 @@ class Board {
             this.openedBlocks.push(block);
         }
         if (this.openedBlocks.length === this.limit) {
+            this.updateTurnCount();
             this.pairCheck();
         }
     }
@@ -256,6 +288,9 @@ class Board {
         const blocksMatch = firstBlock.getFigureRef().src === secondBlock.getFigureRef().src;
         this.pairTimerRunning = true;
         const timer = blocksMatch ? 500 : this.settings.timeoutSpeed;
+        this.gameStats.increment(blocksMatch ? 'matchCount' : 'missCount');
+        this.gameUI.updateElementCount(this.gameStats.get('matchCount'), 'matchCount');
+        this.gameUI.updateElementCount(this.gameStats.get('missCount'), 'missCount');
         !blocksMatch &&
             setTimeout(() => {
                 this.openedBlocks.forEach((b) => b.getDivElementRef().classList.toggle("notMatch"));
@@ -347,6 +382,10 @@ class Board {
         });
         this.draw();
         this.timer.startTimer(gameLength);
+    }
+    updateTurnCount() {
+        this.gameStats.increment('turnCount');
+        this.gameUI.updateElementCount(this.gameStats.get('turnCount'), 'turnCount');
     }
 }
 const urlParams = new URLSearchParams(window.location.search);

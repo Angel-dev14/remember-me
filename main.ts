@@ -370,8 +370,12 @@ class Board {
   private readonly timer: Timer;
   private readonly settings: BoardSettings;
   private isGameActive = false;
+  private gameStats: GameStats;
+  private gameUI: GameUI;
 
   constructor(settings: BoardSettings) {
+    this.gameStats = new GameStats();
+    this.gameUI = new GameUI();
     this.gameTimeRef = document.getElementById(
       "gameTimer"
     ) as HTMLParagraphElement;
@@ -417,6 +421,7 @@ class Board {
     }
 
     if (this.openedBlocks.length === this.limit) {
+      this.updateTurnCount()
       this.pairCheck();
     }
   }
@@ -428,6 +433,11 @@ class Board {
       firstBlock.getFigureRef().src === secondBlock.getFigureRef().src;
     this.pairTimerRunning = true;
     const timer = blocksMatch ? 500 : this.settings.timeoutSpeed;
+
+    this.gameStats.increment(blocksMatch ? 'matchCount' : 'missCount');
+    this.gameUI.updateElementCount(this.gameStats.get('matchCount'), 'matchCount');
+    this.gameUI.updateElementCount(this.gameStats.get('missCount'), 'missCount');
+
     !blocksMatch &&
       setTimeout(() => {
         this.openedBlocks.forEach((b) =>
@@ -534,6 +544,11 @@ class Board {
     });
     this.draw();
     this.timer.startTimer(gameLength);
+  }
+
+  private updateTurnCount() {
+    this.gameStats.increment('turnCount');
+    this.gameUI.updateElementCount(this.gameStats.get('turnCount'), 'turnCount');
   }
 }
 
