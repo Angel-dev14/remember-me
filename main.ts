@@ -310,12 +310,12 @@ class Timer {
   }
 }
 
-type StatKey = "turnCount" | "matchCount" | "mismatchCount";
+type StatKey = "turnCount" | "matchCount" | "missCount";
 
 class GameStats {
   private turnCount: number = 0;
   private matchCount: number = 0;
-  private mismatchCount: number = 0;
+  private missCount: number = 0;
 
   increment(stat: StatKey) {
     this[stat] += 1;
@@ -328,7 +328,32 @@ class GameStats {
   resetStats() {
     this.turnCount = 0;
     this.matchCount = 0;
-    this.mismatchCount = 0;
+    this.missCount = 0;
+  }
+}
+
+class GameUI {
+  // References to UI elements
+  private turnCount: HTMLElement;
+  private matchCount: HTMLElement;
+  private missCount: HTMLElement;
+  private accuracyPercentage : HTMLElement
+
+  constructor() {
+    this.turnCount = document.getElementById(
+      "turnCount"
+    ) as HTMLSpanElement;
+    this.matchCount = document.getElementById(
+      "matchCount"
+    ) as HTMLSpanElement;
+    this.missCount = document.getElementById(
+      "missCount"
+    ) as HTMLSpanElement;
+    this.accuracyPercentage = document.getElementById("accurarcyPercentage") as HTMLSpanElement
+  }
+
+  updateElementCount(count:number, element : StatKey) {
+    this[element].textContent = count.toString()
   }
 }
 
