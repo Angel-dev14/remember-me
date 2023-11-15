@@ -227,10 +227,13 @@ class GameUI {
         this.turnCount = document.getElementById("turnCount");
         this.matchCount = document.getElementById("matchCount");
         this.missCount = document.getElementById("missCount");
-        this.accuracyPercentage = document.getElementById("accurarcyPercentage");
+        this.accuracyPercentage = document.getElementById("accuracyPercentage");
     }
     updateElementCount(count, element) {
         this[element].textContent = count.toString();
+    }
+    updatePercentage(percentage) {
+        this.accuracyPercentage.textContent = `${percentage.toString()}%`;
     }
 }
 class Board {
@@ -288,9 +291,14 @@ class Board {
         const blocksMatch = firstBlock.getFigureRef().src === secondBlock.getFigureRef().src;
         this.pairTimerRunning = true;
         const timer = blocksMatch ? 500 : this.settings.timeoutSpeed;
-        this.gameStats.increment(blocksMatch ? 'matchCount' : 'missCount');
-        this.gameUI.updateElementCount(this.gameStats.get('matchCount'), 'matchCount');
-        this.gameUI.updateElementCount(this.gameStats.get('missCount'), 'missCount');
+        this.gameStats.increment(blocksMatch ? "matchCount" : "missCount");
+        this.gameUI.updateElementCount(this.gameStats.get("matchCount"), "matchCount");
+        this.gameUI.updateElementCount(this.gameStats.get("missCount"), "missCount");
+        // TODO Update the percentage
+        this.gameUI.updatePercentage(Math.round((this.gameStats.get("matchCount") /
+            (this.gameStats.get("matchCount") +
+                this.gameStats.get("missCount"))) *
+            100));
         !blocksMatch &&
             setTimeout(() => {
                 this.openedBlocks.forEach((b) => b.getDivElementRef().classList.toggle("notMatch"));
@@ -384,8 +392,8 @@ class Board {
         this.timer.startTimer(gameLength);
     }
     updateTurnCount() {
-        this.gameStats.increment('turnCount');
-        this.gameUI.updateElementCount(this.gameStats.get('turnCount'), 'turnCount');
+        this.gameStats.increment("turnCount");
+        this.gameUI.updateElementCount(this.gameStats.get("turnCount"), "turnCount");
     }
 }
 const urlParams = new URLSearchParams(window.location.search);

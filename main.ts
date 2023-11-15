@@ -337,23 +337,23 @@ class GameUI {
   private turnCount: HTMLElement;
   private matchCount: HTMLElement;
   private missCount: HTMLElement;
-  private accuracyPercentage : HTMLElement
+  private accuracyPercentage: HTMLElement;
 
   constructor() {
-    this.turnCount = document.getElementById(
-      "turnCount"
+    this.turnCount = document.getElementById("turnCount") as HTMLSpanElement;
+    this.matchCount = document.getElementById("matchCount") as HTMLSpanElement;
+    this.missCount = document.getElementById("missCount") as HTMLSpanElement;
+    this.accuracyPercentage = document.getElementById(
+      "accuracyPercentage"
     ) as HTMLSpanElement;
-    this.matchCount = document.getElementById(
-      "matchCount"
-    ) as HTMLSpanElement;
-    this.missCount = document.getElementById(
-      "missCount"
-    ) as HTMLSpanElement;
-    this.accuracyPercentage = document.getElementById("accurarcyPercentage") as HTMLSpanElement
   }
 
-  updateElementCount(count:number, element : StatKey) {
-    this[element].textContent = count.toString()
+  updateElementCount(count: number, element: StatKey) {
+    this[element].textContent = count.toString();
+  }
+
+  updatePercentage(percentage: number) {
+    this.accuracyPercentage.textContent = `${percentage.toString()}%`;
   }
 }
 
@@ -366,12 +366,12 @@ class Board {
   private readonly size: number;
   private matchedPairs: number = 0;
   private pairTimerRunning: boolean = false;
-  private gameTimeRef: HTMLParagraphElement;
+  private readonly gameTimeRef: HTMLParagraphElement;
   private readonly timer: Timer;
   private readonly settings: BoardSettings;
   private isGameActive = false;
-  private gameStats: GameStats;
-  private gameUI: GameUI;
+  private readonly gameStats: GameStats;
+  private readonly gameUI: GameUI;
 
   constructor(settings: BoardSettings) {
     this.gameStats = new GameStats();
@@ -421,7 +421,7 @@ class Board {
     }
 
     if (this.openedBlocks.length === this.limit) {
-      this.updateTurnCount()
+      this.updateTurnCount();
       this.pairCheck();
     }
   }
@@ -434,9 +434,25 @@ class Board {
     this.pairTimerRunning = true;
     const timer = blocksMatch ? 500 : this.settings.timeoutSpeed;
 
-    this.gameStats.increment(blocksMatch ? 'matchCount' : 'missCount');
-    this.gameUI.updateElementCount(this.gameStats.get('matchCount'), 'matchCount');
-    this.gameUI.updateElementCount(this.gameStats.get('missCount'), 'missCount');
+    this.gameStats.increment(blocksMatch ? "matchCount" : "missCount");
+    this.gameUI.updateElementCount(
+      this.gameStats.get("matchCount"),
+      "matchCount"
+    );
+    this.gameUI.updateElementCount(
+      this.gameStats.get("missCount"),
+      "missCount"
+    );
+
+    // TODO Update the percentage
+    this.gameUI.updatePercentage(
+      Math.round(
+        (this.gameStats.get("matchCount") /
+          (this.gameStats.get("matchCount") +
+            this.gameStats.get("missCount"))) *
+          100
+      )
+    );
 
     !blocksMatch &&
       setTimeout(() => {
@@ -547,8 +563,11 @@ class Board {
   }
 
   private updateTurnCount() {
-    this.gameStats.increment('turnCount');
-    this.gameUI.updateElementCount(this.gameStats.get('turnCount'), 'turnCount');
+    this.gameStats.increment("turnCount");
+    this.gameUI.updateElementCount(
+      this.gameStats.get("turnCount"),
+      "turnCount"
+    );
   }
 }
 
