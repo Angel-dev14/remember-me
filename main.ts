@@ -333,19 +333,26 @@ class GameStats {
 }
 
 class GameUI {
-  // References to UI elements
-  private turnCount: HTMLElement;
-  private matchCount: HTMLElement;
-  private missCount: HTMLElement;
-  private accuracyPercentage: HTMLElement;
+  private turnCount: HTMLSpanElement;
+  private matchCount: HTMLSpanElement;
+  private missCount: HTMLSpanElement;
+  private accuracyPercentage: HTMLSpanElement;
+  private speedSelector: HTMLSelectElement;
 
-  constructor() {
+  constructor(onSpeedChange: (newSpeed: number) => void) {
     this.turnCount = document.getElementById("turnCount") as HTMLSpanElement;
     this.matchCount = document.getElementById("matchCount") as HTMLSpanElement;
     this.missCount = document.getElementById("missCount") as HTMLSpanElement;
     this.accuracyPercentage = document.getElementById(
       "accuracyPercentage"
     ) as HTMLSpanElement;
+    this.speedSelector = document.getElementById(
+      "speedSelect"
+    ) as HTMLSelectElement;
+    this.speedSelector.addEventListener("change", () => {
+      const selectedSpeed = parseInt(this.speedSelector.value);
+      onSpeedChange(selectedSpeed);
+    });
   }
 
   updateElementCount(count: string, element: StatKey) {
@@ -375,7 +382,7 @@ class Board {
 
   constructor(settings: BoardSettings) {
     this.gameStats = new GameStats();
-    this.gameUI = new GameUI();
+    this.gameUI = new GameUI(this.handleSpeedChange.bind(this));
     this.gameTimeRef = document.getElementById(
       "gameTimer"
     ) as HTMLParagraphElement;
@@ -397,6 +404,10 @@ class Board {
         this.blocks[i][j] = blocksArray[i * settings.size + j];
       }
     }
+  }
+
+  private handleSpeedChange(newSpeed: number) {
+    this.settings.timeoutSpeed = newSpeed;
   }
 
   private updateTimeDisplay(timeString: string, color?: string): void {

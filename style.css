@@ -252,7 +252,6 @@ body {
 
 .timer-container {
   background-color: var(--light-blue);
-  margin: 0.5em auto;
   display: flex;
   flex-direction: column;
   justify-content: center;

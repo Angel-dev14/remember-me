@@ -223,11 +223,16 @@ class GameStats {
     }
 }
 class GameUI {
-    constructor() {
+    constructor(onSpeedChange) {
         this.turnCount = document.getElementById("turnCount");
         this.matchCount = document.getElementById("matchCount");
         this.missCount = document.getElementById("missCount");
         this.accuracyPercentage = document.getElementById("accuracyPercentage");
+        this.speedSelector = document.getElementById("speedSelect");
+        this.speedSelector.addEventListener("change", () => {
+            const selectedSpeed = parseInt(this.speedSelector.value);
+            onSpeedChange(selectedSpeed);
+        });
     }
     updateElementCount(count, element) {
         this[element].textContent = count;
@@ -242,7 +247,7 @@ class Board {
         this.pairTimerRunning = false;
         this.isGameActive = false;
         this.gameStats = new GameStats();
-        this.gameUI = new GameUI();
+        this.gameUI = new GameUI(this.handleSpeedChange.bind(this));
         this.gameTimeRef = document.getElementById("gameTimer");
         this.timer = new Timer(this.updateTimeDisplay.bind(this));
         this.settings = settings;
@@ -261,6 +266,9 @@ class Board {
                 this.blocks[i][j] = blocksArray[i * settings.size + j];
             }
         }
+    }
+    handleSpeedChange(newSpeed) {
+        this.settings.timeoutSpeed = newSpeed;
     }
     updateTimeDisplay(timeString, color) {
         this.gameTimeRef.textContent = timeString;
