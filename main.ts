@@ -27,8 +27,8 @@ const DifficultySettings: {
 };
 
 abstract class Animation {
-  protected headingElementRef: HTMLElement;
-  protected parentContainerRef: HTMLDivElement;
+  protected readonly headingElementRef: HTMLElement;
+  protected readonly parentContainerRef: HTMLDivElement;
 
   protected constructor(elementRef: HTMLElement) {
     this.headingElementRef = elementRef;
@@ -81,7 +81,7 @@ abstract class Animation {
 
 class ConfettiAnimation extends Animation {
   private confettiArray: HTMLElement[] = [];
-  private confettiCount = 200;
+  private readonly confettiCount = 200;
 
   constructor(headingElementRef: HTMLHeadingElement) {
     super(headingElementRef);
@@ -103,7 +103,7 @@ class ConfettiAnimation extends Animation {
 
 class TimeOutAnimation extends Animation {
   private gameOverElements: HTMLElement[] = [];
-  private elementCount = 200;
+  private readonly clockCount = 200;
 
   constructor(headingElementRef: HTMLHeadingElement) {
     super(headingElementRef);
@@ -113,7 +113,7 @@ class TimeOutAnimation extends Animation {
     this.gameOverElements = this.animateElements(
       "⏰",
       "Time's Up!",
-      this.elementCount
+      this.clockCount
     );
   }
 
@@ -260,7 +260,7 @@ class Figure {
 class Timer {
   private intervalId: number | null = null;
   private seconds = 0;
-  private updateTimeCallback: (timeString: string, color?: string) => void;
+  private readonly updateTimeCallback: (timeString: string, color?: string) => void;
 
   constructor(
     updateTimeCallback: (timeString: string, color?: string) => void
@@ -333,11 +333,13 @@ class GameStats {
 }
 
 class GameUI {
-  private turnCount: HTMLSpanElement;
-  private matchCount: HTMLSpanElement;
-  private missCount: HTMLSpanElement;
-  private accuracyPercentage: HTMLSpanElement;
-  private speedSelector: HTMLSelectElement;
+  private readonly turnCount: HTMLSpanElement;
+  private readonly matchCount: HTMLSpanElement;
+  private readonly missCount: HTMLSpanElement;
+  private readonly accuracyPercentage: HTMLSpanElement;
+  private readonly speedSelector: HTMLSelectElement;
+  // TODO Block background checkbox
+
 
   constructor(onSpeedChange: (newSpeed: number) => void) {
     this.turnCount = document.getElementById("turnCount") as HTMLSpanElement;

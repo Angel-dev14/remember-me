@@ -48,7 +48,8 @@ export const Header = class Header extends HTMLElement {
 customElements.define("custom-header", Header);
 
 class Game {
-  private gameModes: GameMode[];
+  private readonly gameModes: GameMode[];
+  private readonly quitBtn: Quit;
 
   constructor() {
     this.gameModes = [];
@@ -56,12 +57,12 @@ class Game {
       const gameMode = GameModeFactory.create(diff);
       this.gameModes.push(gameMode);
     });
-    const quitBtn = new Quit();
+     this.quitBtn = new Quit();
   }
 }
 
 class Quit {
-  private quitBtnRef: HTMLButtonElement;
+  private readonly quitBtnRef: HTMLButtonElement;
 
   constructor() {
     this.quitBtnRef = document.getElementById("quit") as HTMLButtonElement;
@@ -80,8 +81,8 @@ class Quit {
 }
 
 abstract class GameMode {
-  protected button: HTMLButtonElement;
-  protected difficulty: Difficulty;
+  protected readonly button: HTMLButtonElement;
+  protected readonly difficulty: Difficulty;
 
   constructor(buttonId: string, difficulty: Difficulty) {
     this.button = document.getElementById(buttonId) as HTMLButtonElement;

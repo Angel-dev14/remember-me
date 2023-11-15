@@ -62,10 +62,10 @@ class TimeOutAnimation extends Animation {
     constructor(headingElementRef) {
         super(headingElementRef);
         this.gameOverElements = [];
-        this.elementCount = 200;
+        this.clockCount = 200;
     }
     start() {
-        this.gameOverElements = this.animateElements("⏰", "Time's Up!", this.elementCount);
+        this.gameOverElements = this.animateElements("⏰", "Time's Up!", this.clockCount);
     }
     stop() {
         this.gameOverElements.forEach((element) => element.remove());
@@ -223,6 +223,7 @@ class GameStats {
     }
 }
 class GameUI {
+    // TODO Block background checkbox
     constructor(onSpeedChange) {
         this.turnCount = document.getElementById("turnCount");
         this.matchCount = document.getElementById("matchCount");

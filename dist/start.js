@@ -52,7 +52,7 @@ class Game {
             const gameMode = GameModeFactory.create(diff);
             this.gameModes.push(gameMode);
         });
-        const quitBtn = new Quit();
+        this.quitBtn = new Quit();
     }
 }
 class Quit {
