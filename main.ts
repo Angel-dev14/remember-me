@@ -348,11 +348,11 @@ class GameUI {
     ) as HTMLSpanElement;
   }
 
-  updateElementCount(count: number, element: StatKey) {
-    this[element].textContent = count.toString();
+  updateElementCount(count: string, element: StatKey) {
+    this[element].textContent = count;
   }
 
-  updatePercentage(percentage: number) {
+  updatePercentage(percentage: string) {
     this.accuracyPercentage.textContent = `${percentage.toString()}%`;
   }
 }
@@ -434,26 +434,6 @@ class Board {
     this.pairTimerRunning = true;
     const timer = blocksMatch ? 500 : this.settings.timeoutSpeed;
 
-    this.gameStats.increment(blocksMatch ? "matchCount" : "missCount");
-    this.gameUI.updateElementCount(
-      this.gameStats.get("matchCount"),
-      "matchCount"
-    );
-    this.gameUI.updateElementCount(
-      this.gameStats.get("missCount"),
-      "missCount"
-    );
-
-    // TODO Update the percentage
-    this.gameUI.updatePercentage(
-      Math.round(
-        (this.gameStats.get("matchCount") /
-          (this.gameStats.get("matchCount") +
-            this.gameStats.get("missCount"))) *
-          100
-      )
-    );
-
     !blocksMatch &&
       setTimeout(() => {
         this.openedBlocks.forEach((b) =>
@@ -461,6 +441,7 @@ class Board {
         );
       }, BLOCK_OPEN_ANIMATION_LENGTH);
     setTimeout(() => {
+      this.updateStats(blocksMatch);
       this.resetPair(blocksMatch);
       this.pairTimerRunning = false;
     }, timer);
@@ -475,6 +456,33 @@ class Board {
         this.gameOver("victory");
       }
     }
+  }
+
+  updateStats(blocksMatch: boolean) {
+    this.gameStats.increment(blocksMatch ? "matchCount" : "missCount");
+    this.gameUI.updateElementCount(
+      this.gameStats.get("matchCount").toString(),
+      "matchCount"
+    );
+    this.gameUI.updateElementCount(
+      this.gameStats.get("missCount").toString(),
+      "missCount"
+    );
+
+    this.gameUI.updatePercentage(
+      (
+        (this.gameStats.get("matchCount") / this.gameStats.get("turnCount")) *
+        100
+      ).toFixed(1)
+    );
+  }
+
+  private updateTurnCount() {
+    this.gameStats.increment("turnCount");
+    this.gameUI.updateElementCount(
+      this.gameStats.get("turnCount").toString(),
+      "turnCount"
+    );
   }
 
   gameOver(src: string) {
@@ -560,14 +568,6 @@ class Board {
     });
     this.draw();
     this.timer.startTimer(gameLength);
-  }
-
-  private updateTurnCount() {
-    this.gameStats.increment("turnCount");
-    this.gameUI.updateElementCount(
-      this.gameStats.get("turnCount"),
-      "turnCount"
-    );
   }
 }
 
