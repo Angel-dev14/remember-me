@@ -1,4 +1,5 @@
 import { fields } from "./possibleImages.js";
+import { SoundPlayer } from "./start.js";
 const ANIMATION_LENGTH = 6000;
 const BLOCK_OPEN_ANIMATION_LENGTH = 600;
 var Difficulties;
@@ -300,6 +301,7 @@ class Board {
         const blocksMatch = firstBlock.getFigureRef().src === secondBlock.getFigureRef().src;
         this.pairTimerRunning = true;
         const timer = blocksMatch ? 500 : this.settings.timeoutSpeed;
+        SoundPlayer.playSound(blocksMatch);
         !blocksMatch &&
             setTimeout(() => {
                 this.openedBlocks.forEach((b) => b.getDivElementRef().classList.toggle("notMatch"));

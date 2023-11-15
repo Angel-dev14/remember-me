@@ -39,6 +39,7 @@ export const Header = class Header extends HTMLElement {
         if (soundButton) {
             soundButton.addEventListener("click", function () {
                 soundButton.classList.toggle("activeSounds");
+                SoundPlayer.toggleMute();
                 soundButton.classList.toggle("deactivatedSounds");
             });
         }
@@ -108,6 +109,18 @@ class GameModeFactory {
         }
     }
 }
+export class SoundPlayer {
+    static toggleMute() {
+        this.isMuted = !this.isMuted;
+    }
+    static playSound(match) {
+        if (this.isMuted)
+            return;
+        const audio = new Audio(`./sounds/${match ? "successBellShort.wav" : "fuzzed3Steps.wav"}`);
+        audio.play();
+    }
+}
+SoundPlayer.isMuted = false;
 if (window.location.pathname.endsWith("/remember-me/")) {
     const game = new Game();
 }

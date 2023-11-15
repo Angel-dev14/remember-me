@@ -1,4 +1,6 @@
 import { fields } from "./possibleImages.js";
+import { SoundPlayer } from "./start.js";
+
 const ANIMATION_LENGTH = 6000;
 const BLOCK_OPEN_ANIMATION_LENGTH = 600;
 
@@ -260,7 +262,10 @@ class Figure {
 class Timer {
   private intervalId: number | null = null;
   private seconds = 0;
-  private readonly updateTimeCallback: (timeString: string, color?: string) => void;
+  private readonly updateTimeCallback: (
+    timeString: string,
+    color?: string
+  ) => void;
 
   constructor(
     updateTimeCallback: (timeString: string, color?: string) => void
@@ -339,7 +344,6 @@ class GameUI {
   private readonly accuracyPercentage: HTMLSpanElement;
   private readonly speedSelector: HTMLSelectElement;
   // TODO Block background checkbox
-
 
   constructor(onSpeedChange: (newSpeed: number) => void) {
     this.turnCount = document.getElementById("turnCount") as HTMLSpanElement;
@@ -446,6 +450,8 @@ class Board {
       firstBlock.getFigureRef().src === secondBlock.getFigureRef().src;
     this.pairTimerRunning = true;
     const timer = blocksMatch ? 500 : this.settings.timeoutSpeed;
+
+    SoundPlayer.playSound(blocksMatch);
 
     !blocksMatch &&
       setTimeout(() => {

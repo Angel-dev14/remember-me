@@ -39,6 +39,7 @@ export const Header = class Header extends HTMLElement {
     if (soundButton) {
       soundButton.addEventListener("click", function () {
         soundButton.classList.toggle("activeSounds");
+        SoundPlayer.toggleMute();
         soundButton.classList.toggle("deactivatedSounds");
       });
     }
@@ -57,7 +58,7 @@ class Game {
       const gameMode = GameModeFactory.create(diff);
       this.gameModes.push(gameMode);
     });
-     this.quitBtn = new Quit();
+    this.quitBtn = new Quit();
   }
 }
 
@@ -128,6 +129,23 @@ class GameModeFactory {
       default:
         throw new Error("Invalid difficulty level");
     }
+  }
+}
+
+export class SoundPlayer {
+  private static isMuted: boolean = false;
+
+  static toggleMute() {
+    this.isMuted = !this.isMuted;
+  }
+
+  static playSound(match: boolean) {
+    if (this.isMuted) return;
+
+    const audio = new Audio(
+      `./sounds/${match ? "successBellShort.wav" : "fuzzed3Steps.wav"}`
+    );
+    audio.play();
   }
 }
 
