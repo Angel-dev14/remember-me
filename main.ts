@@ -17,13 +17,9 @@ enum Difficulties {
 }
 
 const DifficultySettings: {
-  [key in Difficulties]: {
-    gameLength: number;
-    timeoutSpeed: number;
-    size: number;
-  };
+  [key in Difficulties]: BoardSettings
 } = {
-  [Difficulties.EASY]: { gameLength: 5, timeoutSpeed: 2000, size: 3 },
+  [Difficulties.EASY]: { gameLength: 5, timeoutSpeed: 2000, size: 2 },
   [Difficulties.MEDIUM]: { gameLength: 5, timeoutSpeed: 1500, size: 4 },
   [Difficulties.HARD]: { gameLength: 3, timeoutSpeed: 1000, size: 6 },
 };
@@ -32,7 +28,7 @@ abstract class Animation {
   protected readonly headingElementRef: HTMLElement;
   protected readonly parentContainerRef: HTMLDivElement;
 
-  protected constructor(elementRef: HTMLElement) {
+  constructor(elementRef: HTMLElement) {
     this.headingElementRef = elementRef;
     this.parentContainerRef = document.getElementById(
       "gameoverParent"
@@ -101,6 +97,7 @@ class ConfettiAnimation extends Animation {
     this.confettiArray.forEach((confetti) => confetti.remove());
     this.confettiArray = [];
   }
+
 }
 
 class TimeOutAnimation extends Animation {
@@ -276,7 +273,6 @@ class Timer {
   startTimer(gameLength: number): void {
     this.seconds = gameLength * 60;
     this.updateTime();
-
     this.intervalId = window.setInterval(() => {
       this.seconds--;
 
@@ -462,7 +458,6 @@ class Board {
     setTimeout(() => {
       this.updateStats(blocksMatch);
       this.resetPair(blocksMatch);
-      this.pairTimerRunning = false;
     }, timer);
   }
 
@@ -475,6 +470,9 @@ class Board {
         this.gameOver("victory");
       }
     }
+    setTimeout(() => {
+      this.pairTimerRunning = false;
+    }, BLOCK_OPEN_ANIMATION_LENGTH);
   }
 
   updateStats(blocksMatch: boolean) {
@@ -579,18 +577,19 @@ class Board {
       this.container.appendChild(row);
     }
   }
-  startGame(gameLength: number): void {
+
+  startGame(): void {
     this.isGameActive = true;
     const quitButtons = document.querySelectorAll(".quit-game");
     quitButtons.forEach((button) => {
       button.addEventListener("click", () => this.gameOver("quit"));
     });
     this.draw();
-    this.timer.startTimer(gameLength);
+    this.timer.startTimer(this.settings.gameLength);
   }
 }
 
 const urlParams = new URLSearchParams(window.location.search);
 const gameMode = urlParams.get("gameMode") as Difficulties;
 const gameBoard = new Board(DifficultySettings[gameMode]);
-gameBoard.startGame(DifficultySettings[gameMode].gameLength);
+gameBoard.startGame();

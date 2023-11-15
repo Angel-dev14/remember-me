@@ -10,15 +10,13 @@ export const Header = class Header extends HTMLElement {
     <div class="header">
     <div class="spacer"></div>
     <div class="logo-title">
-    <a class='logo' href="http://127.0.0.1:5500/Websites/Lesson%202%20-%20Memory%20Game/remember-me/">
-            <img class='logo' src="./images/logo/logo.png" alt="header logo" width="50px" heigth="auto">
+    <a class='logo'>
+           <img onclick="window.history.back()" class='logo' src="./images/logo/logo.png" alt="header logo" width="50px" heigth="auto">
           </a>
       <div class="title">
         <p>Remember Me</p>
       </div>
-          
           </div>
-
           <div class="header-buttons">
           <button id="musicButton" class="header-button activeMusic"></button>
           <button id="soundButton" class="header-button activeSounds"></button>
@@ -67,7 +65,7 @@ class Quit {
 
   constructor() {
     this.quitBtnRef = document.getElementById("quit") as HTMLButtonElement;
-    this.quitBtnRef.addEventListener("click", () => this.buttonClick());
+    this.quitBtnRef?.addEventListener("click", () => this.buttonClick());
   }
 
   buttonClick() {
@@ -86,13 +84,14 @@ abstract class GameMode {
   protected readonly difficulty: Difficulty;
 
   constructor(buttonId: string, difficulty: Difficulty) {
+    console.log('contructor init');
     this.button = document.getElementById(buttonId) as HTMLButtonElement;
     this.difficulty = difficulty;
     this.addListener();
   }
 
   protected addListener(): void {
-    this.button.addEventListener("click", () => {
+    this.button?.addEventListener("click", () => {
       const params = new URLSearchParams({ gameMode: this.difficulty });
       window.location.href = `game.html?${params.toString()}`;
     });
@@ -145,10 +144,9 @@ export class SoundPlayer {
     const audio = new Audio(
       `./sounds/${match ? "successBellShort.wav" : "fuzzed3Steps.wav"}`
     );
+    audio.volume = 1;
     audio.play();
   }
 }
 
-if (window.location.pathname.endsWith("/remember-me/")) {
-  const game = new Game();
-}
+const game = new Game();

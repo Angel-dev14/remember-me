@@ -10,15 +10,13 @@ export const Header = class Header extends HTMLElement {
     <div class="header">
     <div class="spacer"></div>
     <div class="logo-title">
-    <a class='logo' href="http://127.0.0.1:5500/Websites/Lesson%202%20-%20Memory%20Game/remember-me/">
-            <img class='logo' src="./images/logo/logo.png" alt="header logo" width="50px" heigth="auto">
+    <a class='logo'>
+           <img onclick="window.history.back()" class='logo' src="./images/logo/logo.png" alt="header logo" width="50px" heigth="auto">
           </a>
       <div class="title">
         <p>Remember Me</p>
       </div>
-          
           </div>
-
           <div class="header-buttons">
           <button id="musicButton" class="header-button activeMusic"></button>
           <button id="soundButton" class="header-button activeSounds"></button>
@@ -58,8 +56,9 @@ class Game {
 }
 class Quit {
     constructor() {
+        var _a;
         this.quitBtnRef = document.getElementById("quit");
-        this.quitBtnRef.addEventListener("click", () => this.buttonClick());
+        (_a = this.quitBtnRef) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => this.buttonClick());
     }
     buttonClick() {
         if (window.confirm("Are you sure you want to quit? There's no escape from fun!")) {
@@ -69,12 +68,14 @@ class Quit {
 }
 class GameMode {
     constructor(buttonId, difficulty) {
+        console.log('contructor init');
         this.button = document.getElementById(buttonId);
         this.difficulty = difficulty;
         this.addListener();
     }
     addListener() {
-        this.button.addEventListener("click", () => {
+        var _a;
+        (_a = this.button) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => {
             const params = new URLSearchParams({ gameMode: this.difficulty });
             window.location.href = `game.html?${params.toString()}`;
         });
@@ -117,11 +118,10 @@ export class SoundPlayer {
         if (this.isMuted)
             return;
         const audio = new Audio(`./sounds/${match ? "successBellShort.wav" : "fuzzed3Steps.wav"}`);
+        audio.volume = 1;
         audio.play();
     }
 }
 SoundPlayer.isMuted = false;
-if (window.location.pathname.endsWith("/remember-me/")) {
-    const game = new Game();
-}
+const game = new Game();
 //# sourceMappingURL=start.js.map
