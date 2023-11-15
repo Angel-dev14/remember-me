@@ -51,8 +51,8 @@ class Game {
         Object.values(Difficulty).forEach((diff) => {
             const gameMode = GameModeCreator.create(diff);
             this.gameModes.push(gameMode);
-            this.start();
         });
+        this.start();
     }
     start() {
         const quitBtn = new Quit();
@@ -64,7 +64,9 @@ class Quit {
         this.quitBtnRef.addEventListener("click", () => this.buttonClick());
     }
     buttonClick() {
-        console.log("Quit clicked");
+        if (window.confirm("Are you sure you want to quit? There's no escape from fun!")) {
+            window.location.href = "https://github.com/JustAnotherHeroRiding";
+        }
     }
 }
 class GameModeCreator {

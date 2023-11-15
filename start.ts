@@ -3,6 +3,7 @@ enum Difficulty {
   MEDIUM = "MEDIUM",
   HARD = "HARD",
 }
+
 export const Header = class Header extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
@@ -45,6 +46,7 @@ export const Header = class Header extends HTMLElement {
 };
 
 customElements.define("custom-header", Header);
+
 class Game {
   private gameModes: GameMode[];
 
@@ -53,8 +55,8 @@ class Game {
     Object.values(Difficulty).forEach((diff) => {
       const gameMode = GameModeCreator.create(diff);
       this.gameModes.push(gameMode);
-      this.start();
     });
+    this.start();
   }
 
   start() {
@@ -71,7 +73,13 @@ class Quit {
   }
 
   buttonClick() {
-    console.log("Quit clicked");
+    if (
+      window.confirm(
+        "Are you sure you want to quit? There's no escape from fun!"
+      )
+    ) {
+      window.location.href = "https://github.com/JustAnotherHeroRiding";
+    }
   }
 }
 
