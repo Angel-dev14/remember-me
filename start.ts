@@ -53,13 +53,9 @@ class Game {
   constructor() {
     this.gameModes = [];
     Object.values(Difficulty).forEach((diff) => {
-      const gameMode = GameModeCreator.create(diff);
+      const gameMode = GameModeFactory.create(diff);
       this.gameModes.push(gameMode);
     });
-    this.start();
-  }
-
-  start() {
     const quitBtn = new Quit();
   }
 }
@@ -83,42 +79,27 @@ class Quit {
   }
 }
 
-class GameModeCreator {
-  static create(difficulty: Difficulty) {
-    switch (difficulty) {
-      case Difficulty.EASY:
-        return new EasyMode();
-      case Difficulty.MEDIUM:
-        return new MediumMode();
-      default:
-        return new HardMode();
-    }
-  }
-}
-
 abstract class GameMode {
   protected button: HTMLButtonElement;
-  protected difficulty: string;
+  protected difficulty: Difficulty;
 
-  constructor(buttonId: string, diffilculty: Difficulty) {
+  constructor(buttonId: string, difficulty: Difficulty) {
     this.button = document.getElementById(buttonId) as HTMLButtonElement;
-    this.difficulty = diffilculty;
+    this.difficulty = difficulty;
     this.addListener();
   }
 
-  abstract addListener(): void;
+  protected addListener(): void {
+    this.button.addEventListener("click", () => {
+      const params = new URLSearchParams({ gameMode: this.difficulty });
+      window.location.href = `game.html?${params.toString()}`;
+    });
+  }
 }
 
 class EasyMode extends GameMode {
   constructor() {
     super("easy", Difficulty.EASY);
-  }
-
-  addListener(): void {
-    this.button.addEventListener("click", () => {
-      const params = new URLSearchParams({ gameMode: this.difficulty });
-      window.location.href = `game.html?${params.toString()}`;
-    });
   }
 }
 
@@ -126,27 +107,29 @@ class MediumMode extends GameMode {
   constructor() {
     super("medium", Difficulty.MEDIUM);
   }
-
-  addListener(): void {
-    this.button.addEventListener("click", () => {
-      const params = new URLSearchParams({ gameMode: this.difficulty });
-      window.location.href = `game.html?${params.toString()}`;
-    });
-  }
 }
 
 class HardMode extends GameMode {
   constructor() {
     super("hard", Difficulty.HARD);
   }
+}
 
-  addListener(): void {
-    this.button.addEventListener("click", () => {
-      const params = new URLSearchParams({ gameMode: this.difficulty });
-      window.location.href = `game.html?${params.toString()}`;
-    });
+class GameModeFactory {
+  static create(difficulty: Difficulty): GameMode {
+    switch (difficulty) {
+      case Difficulty.EASY:
+        return new EasyMode();
+      case Difficulty.MEDIUM:
+        return new MediumMode();
+      case Difficulty.HARD:
+        return new HardMode();
+      default:
+        throw new Error("Invalid difficulty level");
+    }
   }
 }
+
 if (window.location.pathname.endsWith("/remember-me/")) {
   const game = new Game();
 }
