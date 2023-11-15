@@ -142,7 +142,7 @@ export class SoundPlayer {
     if (this.isMuted) return;
 
     const audio = new Audio(
-      `./sounds/${match ? "successBellShort.wav" : "fuzzed3Steps.wav"}`
+      `./sounds/${match ? "successBellShort.wav" : "trumpetFail.wav"}`
     );
     audio.volume = 1;
     audio.play();
