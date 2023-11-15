@@ -145,6 +145,7 @@ export class SoundPlayer {
     const audio = new Audio(
       `./sounds/${match ? "successBellShort.wav" : "fuzzed3Steps.wav"}`
     );
+    audio.volume = 1;
     audio.play();
   }
 }

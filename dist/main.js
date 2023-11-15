@@ -309,7 +309,6 @@ class Board {
         setTimeout(() => {
             this.updateStats(blocksMatch);
             this.resetPair(blocksMatch);
-            this.pairTimerRunning = false;
         }, timer);
     }
     resetPair(blocksMatch) {
@@ -321,6 +320,9 @@ class Board {
                 this.gameOver("victory");
             }
         }
+        setTimeout(() => {
+            this.pairTimerRunning = false;
+        }, BLOCK_OPEN_ANIMATION_LENGTH);
     }
     updateStats(blocksMatch) {
         this.gameStats.increment(blocksMatch ? "matchCount" : "missCount");
@@ -397,18 +399,18 @@ class Board {
             this.container.appendChild(row);
         }
     }
-    startGame(gameLength) {
+    startGame() {
         this.isGameActive = true;
         const quitButtons = document.querySelectorAll(".quit-game");
         quitButtons.forEach((button) => {
             button.addEventListener("click", () => this.gameOver("quit"));
         });
         this.draw();
-        this.timer.startTimer(gameLength);
+        this.timer.startTimer(this.settings.gameLength);
     }
 }
 const urlParams = new URLSearchParams(window.location.search);
 const gameMode = urlParams.get("gameMode");
 const gameBoard = new Board(DifficultySettings[gameMode]);
-gameBoard.startGame(DifficultySettings[gameMode].gameLength);
+gameBoard.startGame();
 //# sourceMappingURL=main.js.map

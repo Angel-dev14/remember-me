@@ -462,7 +462,6 @@ class Board {
     setTimeout(() => {
       this.updateStats(blocksMatch);
       this.resetPair(blocksMatch);
-      this.pairTimerRunning = false;
     }, timer);
   }
 
@@ -475,6 +474,9 @@ class Board {
         this.gameOver("victory");
       }
     }
+    setTimeout(() => {
+      this.pairTimerRunning = false;
+    }, BLOCK_OPEN_ANIMATION_LENGTH);
   }
 
   updateStats(blocksMatch: boolean) {
@@ -579,18 +581,18 @@ class Board {
       this.container.appendChild(row);
     }
   }
-  startGame(gameLength: number): void {
+  startGame(): void {
     this.isGameActive = true;
     const quitButtons = document.querySelectorAll(".quit-game");
     quitButtons.forEach((button) => {
       button.addEventListener("click", () => this.gameOver("quit"));
     });
     this.draw();
-    this.timer.startTimer(gameLength);
+    this.timer.startTimer(this.settings.gameLength);
   }
 }
 
 const urlParams = new URLSearchParams(window.location.search);
 const gameMode = urlParams.get("gameMode") as Difficulties;
 const gameBoard = new Board(DifficultySettings[gameMode]);
-gameBoard.startGame(DifficultySettings[gameMode].gameLength);
+gameBoard.startGame();
