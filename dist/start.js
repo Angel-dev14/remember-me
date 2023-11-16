@@ -137,6 +137,10 @@ export class SoundPlayer {
                     this.musicAudio.play();
                 }
             }
+            else {
+                this.isMusicMuted = false;
+                this.playSound("GAME_MUSIC", -1);
+            }
         }
     }
     static playSound(soundType, loopCount = 0) {

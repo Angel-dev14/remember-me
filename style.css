@@ -265,9 +265,36 @@ body {
   box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px,
     rgba(6, 24, 44, 0.65) 0px 4px 6px -1px,
     rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+  position: absolute;
+  left: 0.5em;
+  top: 4em;
 }
 
-@media screen and (max-width: 960px) {
+#statsAndOptions {
+  position: absolute;
+  right: 0.5em;
+  top: 4em;
+}
+
+#statsAndOptions .row {
+  flex-direction: column;
+  gap: 0em;
+}
+
+@media screen and (max-width: 800px) {
+  .timer-container {
+    position: static;
+  }
+  #statsAndOptions {
+    position: static;
+  }
+
+  #statsAndOptions .row {
+    flex-direction: row;
+  }
+}
+
+@media screen and (max-width: 980px) {
   .row {
     gap: 1em !important;
     flex-wrap: wrap;
@@ -285,7 +312,7 @@ body {
     height: 35px !important;
   }
 
-  .title{
+  .title {
     font-size: 2em !important;
   }
   .logo {

@@ -167,6 +167,9 @@ export class SoundPlayer {
         } else {
           this.musicAudio.play();
         }
+      } else {
+        this.isMusicMuted = false;
+        this.playSound("GAME_MUSIC", -1);
       }
     }
   }
