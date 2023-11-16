@@ -342,15 +342,11 @@ class Board {
         const gameOverHeadingRef = document.getElementById("gameoverMessage");
         switch (src) {
             case "victory":
-                SoundPlayer.playSound("VICTORY", 2);
                 const confettiAnimation = new ConfettiAnimation(gameOverHeadingRef);
                 confettiAnimation.start();
-                setTimeout(() => {
-                    confettiAnimation.stop();
-                }, ANIMATION_LENGTH);
+                setTimeout(() => confettiAnimation.stop(), ANIMATION_LENGTH);
                 break;
             case "timeOut":
-                SoundPlayer.playSound("DEFEAT", 2);
                 const timeOutAnimation = new TimeOutAnimation(gameOverHeadingRef);
                 timeOutAnimation.start();
                 setTimeout(() => timeOutAnimation.stop(), ANIMATION_LENGTH);

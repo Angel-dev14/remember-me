@@ -69,6 +69,7 @@ abstract class Animation {
       this.parentContainerRef
         .querySelector(".reset-btn")
         ?.addEventListener("click", () => {
+          localStorage.setItem("playStartSound", "true");
           location.reload();
         });
     }, ANIMATION_LENGTH);
@@ -507,13 +508,17 @@ class Board {
     const gameOverHeadingRef = document.getElementById("gameoverMessage");
     switch (src) {
       case "victory":
+        SoundPlayer.playSound("VICTORY", 2);
         const confettiAnimation = new ConfettiAnimation(
           gameOverHeadingRef as HTMLHeadingElement
         );
         confettiAnimation.start();
-        setTimeout(() => confettiAnimation.stop(), ANIMATION_LENGTH);
+        setTimeout(() => {
+          confettiAnimation.stop();
+        }, ANIMATION_LENGTH);
         break;
       case "timeOut":
+        SoundPlayer.playSound("DEFEAT", 2);
         const timeOutAnimation = new TimeOutAnimation(
           gameOverHeadingRef as HTMLHeadingElement
         );
@@ -585,7 +590,12 @@ class Board {
     });
     this.draw();
     this.timer.startTimer(this.settings.gameLength);
-    SoundPlayer.playSound("START");
+    document.addEventListener("DOMContentLoaded", () => {
+      if (localStorage.getItem("playStartSound") === "true") {
+        SoundPlayer.playSound("START");
+        localStorage.removeItem("playStartSound");
+      }
+    });
   }
 }
 

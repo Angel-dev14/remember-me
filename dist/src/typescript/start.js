@@ -112,14 +112,12 @@ export var SoundFiles;
     SoundFiles["SUCCESS"] = "successBellShort.wav";
     SoundFiles["FAILURE"] = "trumpetFail.wav";
     SoundFiles["START"] = "gameStart.wav";
-    SoundFiles["VICTORY"] = "victoryReverb.wav";
-    SoundFiles["DEFEAT"] = "gameLost.wav";
 })(SoundFiles || (SoundFiles = {}));
 export class SoundPlayer {
     static toggleMute() {
         this.isMuted = !this.isMuted;
     }
-    static playSound(soundType, loopCount = 0) {
+    static playSound(soundType) {
         if (this.isMuted)
             return;
         const soundFile = SoundFiles[soundType];
@@ -127,15 +125,6 @@ export class SoundPlayer {
         if (soundType === "FAILURE") {
             audio.volume = 0.8;
         }
-        let playedTimes = 0;
-        const playOrLoop = () => {
-            playedTimes++;
-            if (loopCount === -1 || playedTimes <= loopCount) {
-                audio.currentTime = 0;
-                audio.play();
-            }
-        };
-        audio.addEventListener("ended", playOrLoop);
         audio.play();
     }
 }

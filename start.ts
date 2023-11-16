@@ -11,7 +11,8 @@ export const Header = class Header extends HTMLElement {
     <div class="spacer"></div>
     <div class="logo-title">
     <a class='logo'>
-           <img onclick="window.history.back()" class='logo' src="./images/logo/logo.png" alt="header logo" width="50px" heigth="auto">
+           <img onclick="!window.location.href.endsWith('/remember-me/') && window.history.back()" 
+           class='logo' src="./images/logo/logo.png" alt="header logo" width="50px" heigth="auto">
           </a>
       <div class="title">
         <p>Remember Me</p>
@@ -28,19 +29,15 @@ export const Header = class Header extends HTMLElement {
   setupEventListeners() {
     const musicButton = this.querySelector("#musicButton");
     const soundButton = this.querySelector("#soundButton");
-    if (musicButton) {
-      musicButton.addEventListener("click", function () {
-        musicButton.classList.toggle("activeMusic");
-        musicButton.classList.toggle("deactivatedMusic");
-      });
-    }
-    if (soundButton) {
-      soundButton.addEventListener("click", function () {
-        soundButton.classList.toggle("activeSounds");
-        SoundPlayer.toggleMute();
-        soundButton.classList.toggle("deactivatedSounds");
-      });
-    }
+    musicButton?.addEventListener("click", function () {
+      musicButton.classList.toggle("activeMusic");
+      musicButton.classList.toggle("deactivatedMusic");
+    });
+    soundButton?.addEventListener("click", function () {
+      soundButton.classList.toggle("activeSounds");
+      SoundPlayer.toggleMute();
+      soundButton.classList.toggle("deactivatedSounds");
+    });
   }
 };
 
@@ -91,6 +88,8 @@ abstract class GameMode {
 
   protected addListener(): void {
     this.button?.addEventListener("click", () => {
+      localStorage.setItem("playStartSound", "true");
+
       const params = new URLSearchParams({ gameMode: this.difficulty });
       window.location.href = `game.html?${params.toString()}`;
     });
@@ -134,28 +133,48 @@ export enum SoundFiles {
   SUCCESS = "successBellShort.wav",
   FAILURE = "trumpetFail.wav",
   START = "gameStart.wav",
+  VICTORY = "victoryReverb.wav",
+  DEFEAT = "gameLost.wav"
 }
 
 export class SoundPlayer {
   private static isMuted: boolean = false;
 
+  static {
+    Object.values(SoundFiles).forEach((file) => {
+      const audio = new Audio(`sounds/${file}`);
+      audio.load();
+    });
+  }
+
   static toggleMute() {
     this.isMuted = !this.isMuted;
   }
 
-  static playSound(soundType: keyof typeof SoundFiles) {
+  static playSound(soundType: keyof typeof SoundFiles, loopCount: number = 0) {
     if (this.isMuted) return;
 
     const soundFile = SoundFiles[soundType];
     const audio = new Audio(`sounds/${soundFile}`);
 
-    if (soundType === 'FAILURE') {
-      audio.volume = 0.9;
+    if (soundType === "FAILURE") {
+      audio.volume = 0.8;
     }
+
+    let playedTimes = 0;
+
+    const playOrLoop = () => {
+      playedTimes++;
+      if (loopCount === -1 || playedTimes <= loopCount) {
+        audio.currentTime = 0;
+        audio.play();
+      }
+    };
+
+    audio.addEventListener("ended", playOrLoop);
 
     audio.play();
   }
 }
-
 
 const game = new Game();
