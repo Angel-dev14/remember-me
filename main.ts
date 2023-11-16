@@ -42,6 +42,7 @@ abstract class Animation {
   }
 
   abstract start(): void;
+  // Use these methods as the logic repeats in the animations
 
   abstract stop(): void;
 
@@ -76,6 +77,11 @@ abstract class Animation {
 
     return elementsArray;
   }
+
+  protected clearElements(elementsArray: HTMLElement[]) {
+    elementsArray.forEach((element) => element.remove());
+    elementsArray.length = 0;
+  }
 }
 
 class ConfettiAnimation extends Animation {
@@ -95,8 +101,7 @@ class ConfettiAnimation extends Animation {
   }
 
   stop() {
-    this.confettiArray.forEach((confetti) => confetti.remove());
-    this.confettiArray = [];
+    this.clearElements(this.confettiArray);
   }
 }
 
@@ -117,8 +122,7 @@ class TimeOutAnimation extends Animation {
   }
 
   stop() {
-    this.gameOverElements.forEach((element) => element.remove());
-    this.gameOverElements = [];
+    this.clearElements(this.gameOverElements);
   }
 }
 
@@ -595,7 +599,7 @@ class Board {
         SoundPlayer.playSound("START");
         localStorage.removeItem("playStartSound");
       }
-      SoundPlayer.playSound("GAME_MUSIC", -1)
+      SoundPlayer.playSound("GAME_MUSIC", -1);
     });
   }
 }

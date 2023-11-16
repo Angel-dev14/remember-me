@@ -45,6 +45,10 @@ class Animation {
         }, ANIMATION_LENGTH);
         return elementsArray;
     }
+    clearElements(elementsArray) {
+        elementsArray.forEach((element) => element.remove());
+        elementsArray.length = 0;
+    }
 }
 class ConfettiAnimation extends Animation {
     constructor(headingElementRef) {
@@ -56,8 +60,7 @@ class ConfettiAnimation extends Animation {
         this.confettiArray = this.animateElements("🎉", "You won", this.confettiCount);
     }
     stop() {
-        this.confettiArray.forEach((confetti) => confetti.remove());
-        this.confettiArray = [];
+        this.clearElements(this.confettiArray);
     }
 }
 class TimeOutAnimation extends Animation {
@@ -70,8 +73,7 @@ class TimeOutAnimation extends Animation {
         this.gameOverElements = this.animateElements("⏰", "Time's Up!", this.clockCount);
     }
     stop() {
-        this.gameOverElements.forEach((element) => element.remove());
-        this.gameOverElements = [];
+        this.clearElements(this.gameOverElements);
     }
 }
 var ElementType;

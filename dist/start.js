@@ -19,8 +19,8 @@ export const Header = class Header extends HTMLElement {
       </div>
           </div>
           <div class="header-buttons">
-          <button id="musicButton" class="header-button activeMusic" title="Toggle Music"></button>
-          <button id="soundButton" class="header-button activeSounds" title="Music Game Sounds"></button>
+          <button id="musicButton" class="header-button deactivatedMusic" title="Toggle Music"></button>
+          <button id="soundButton" class="header-button activeSounds" title="Toggle Game Sounds"></button>
           </div>
     </div>
       `;
@@ -164,7 +164,7 @@ export class SoundPlayer {
     }
 }
 SoundPlayer.isMuted = false;
-SoundPlayer.isMusicMuted = false;
+SoundPlayer.isMusicMuted = true;
 SoundPlayer.musicAudio = null;
 (() => {
     Object.values(SoundFiles).forEach((file) => {
