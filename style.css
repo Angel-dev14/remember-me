@@ -268,12 +268,40 @@ body {
 }
 
 @media screen and (max-width: 960px) {
-  .container {
-    padding: 0.25em, 0.4em;
-  }
   .row {
-    gap: 0.2em;
+    gap: 1em !important;
     flex-wrap: wrap;
+  }
+
+  .block *,
+  .block {
+    width: 75px !important;
+    height: 75px !important;
+  }
+
+  .header-button,
+  .reset-btn {
+    width: 35px !important;
+    height: 35px !important;
+  }
+
+  .title{
+    font-size: 2em !important;
+  }
+  .logo {
+    width: 35px !important;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .row {
+    gap: 0.3em !important;
+  }
+
+  .block *,
+  .block {
+    width: 55px !important;
+    height: 55px !important;
   }
 }
 
