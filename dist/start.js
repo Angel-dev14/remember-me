@@ -19,8 +19,8 @@ export const Header = class Header extends HTMLElement {
       </div>
           </div>
           <div class="header-buttons">
-          <button id="musicButton" class="header-button activeMusic"></button>
-          <button id="soundButton" class="header-button activeSounds"></button>
+          <button id="musicButton" class="header-button activeMusic" title="Toggle Music"></button>
+          <button id="soundButton" class="header-button activeSounds" title="Music Game Sounds"></button>
           </div>
     </div>
       `;
@@ -145,10 +145,10 @@ export class SoundPlayer {
         const soundFile = SoundFiles[soundType];
         const audio = new Audio(`sounds/${soundFile}`);
         if (soundType === "FAILURE") {
-            audio.volume = 0.8;
+            audio.volume = 0.4;
         }
         else if (soundType === "GAME_MUSIC") {
-            audio.volume = 0.2;
+            audio.volume = 0.1;
             this.musicAudio = audio;
         }
         let playedTimes = 0;
