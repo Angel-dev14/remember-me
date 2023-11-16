@@ -407,6 +407,7 @@ class Board {
         });
         this.draw();
         this.timer.startTimer(this.settings.gameLength);
+        SoundPlayer.playStartSound();
     }
 }
 const urlParams = new URLSearchParams(window.location.search);

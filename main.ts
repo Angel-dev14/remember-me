@@ -586,6 +586,7 @@ class Board {
     });
     this.draw();
     this.timer.startTimer(this.settings.gameLength);
+    SoundPlayer.playStartSound()
   }
 }
 

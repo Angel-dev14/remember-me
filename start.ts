@@ -131,6 +131,12 @@ class GameModeFactory {
   }
 }
 
+enum SoundFiles {
+  SUCCESS = "successBelLShort.wav",
+  FAILURE = "trumpetFail.wav",
+  START = "gameStart.wav",
+}
+
 export class SoundPlayer {
   private static isMuted: boolean = false;
 
@@ -141,12 +147,17 @@ export class SoundPlayer {
   static playSound(match: boolean) {
     if (this.isMuted) return;
 
-    const audio = new Audio(
-      `./sounds/${match ? "successBellShort.wav" : "trumpetFail.wav"}`
-    );
-    audio.volume = 1;
+    const audio = new Audio(`sounds/${match ? SoundFiles.SUCCESS : SoundFiles.FAILURE}`);
+    !match && (audio.volume = 0.9)
+
     audio.play();
   }
+  static playStartSound() {
+    if (this.isMuted) return;
+
+    const audio = new Audio(`sounds/${SoundFiles.START}`);
+    audio.play();
+  } 
 }
 
 const game = new Game();

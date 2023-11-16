@@ -110,6 +110,12 @@ class GameModeFactory {
         }
     }
 }
+var SoundFiles;
+(function (SoundFiles) {
+    SoundFiles["SUCCESS"] = "successBelLShort.wav";
+    SoundFiles["FAILURE"] = "trumpetFail.wav";
+    SoundFiles["START"] = "gameStart.wav";
+})(SoundFiles || (SoundFiles = {}));
 export class SoundPlayer {
     static toggleMute() {
         this.isMuted = !this.isMuted;
@@ -117,8 +123,14 @@ export class SoundPlayer {
     static playSound(match) {
         if (this.isMuted)
             return;
-        const audio = new Audio(`./sounds/${match ? "successBellShort.wav" : "trumpetFail.wav"}`);
-        audio.volume = 1;
+        const audio = new Audio(`sounds/${match ? SoundFiles.SUCCESS : SoundFiles.FAILURE}`);
+        !match && (audio.volume = 0.9);
+        audio.play();
+    }
+    static playStartSound() {
+        if (this.isMuted)
+            return;
+        const audio = new Audio(`sounds/${SoundFiles.START}`);
         audio.play();
     }
 }
