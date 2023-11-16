@@ -595,6 +595,7 @@ class Board {
         SoundPlayer.playSound("START");
         localStorage.removeItem("playStartSound");
       }
+      SoundPlayer.playSound("GAME_MUSIC", -1)
     });
   }
 }

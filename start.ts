@@ -31,11 +31,13 @@ export const Header = class Header extends HTMLElement {
     const soundButton = this.querySelector("#soundButton");
     musicButton?.addEventListener("click", function () {
       musicButton.classList.toggle("activeMusic");
+      SoundPlayer.toggleMute(SoundType.MUSIC);
+
       musicButton.classList.toggle("deactivatedMusic");
     });
     soundButton?.addEventListener("click", function () {
       soundButton.classList.toggle("activeSounds");
-      SoundPlayer.toggleMute();
+      SoundPlayer.toggleMute(SoundType.GENERAL);
       soundButton.classList.toggle("deactivatedSounds");
     });
   }
@@ -134,11 +136,18 @@ export enum SoundFiles {
   FAILURE = "trumpetFail.wav",
   START = "gameStart.wav",
   VICTORY = "victoryReverb.wav",
-  DEFEAT = "gameLost.wav"
+  DEFEAT = "gameLost.wav",
+  GAME_MUSIC = "gameMusic.ogg",
 }
 
+export enum SoundType {
+  GENERAL = "GENERAL",
+  MUSIC = "MUSIC",
+}
 export class SoundPlayer {
   private static isMuted: boolean = false;
+  private static isMusicMuted: boolean = false;
+  private static musicAudio: HTMLAudioElement | null = null;
 
   static {
     Object.values(SoundFiles).forEach((file) => {
@@ -147,18 +156,34 @@ export class SoundPlayer {
     });
   }
 
-  static toggleMute() {
-    this.isMuted = !this.isMuted;
+  static toggleMute(type: SoundType) {
+    if (type === SoundType.GENERAL) {
+      this.isMuted = !this.isMuted;
+    } else if (type === SoundType.MUSIC) {
+      this.isMusicMuted = !this.isMusicMuted;
+
+      if (this.musicAudio) {
+        if (this.isMusicMuted) {
+          this.musicAudio.pause();
+        } else {
+          this.musicAudio.play();
+        }
+      }
+    }
   }
 
   static playSound(soundType: keyof typeof SoundFiles, loopCount: number = 0) {
-    if (this.isMuted) return;
+    if (this.isMuted || (soundType === "GAME_MUSIC" && this.isMusicMuted))
+      return;
 
     const soundFile = SoundFiles[soundType];
     const audio = new Audio(`sounds/${soundFile}`);
 
     if (soundType === "FAILURE") {
       audio.volume = 0.8;
+    } else if (soundType === "GAME_MUSIC") {
+      audio.volume = 0.2;
+      this.musicAudio = audio;
     }
 
     let playedTimes = 0;
@@ -172,7 +197,6 @@ export class SoundPlayer {
     };
 
     audio.addEventListener("ended", playOrLoop);
-
     audio.play();
   }
 }

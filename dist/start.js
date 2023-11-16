@@ -31,11 +31,12 @@ export const Header = class Header extends HTMLElement {
         const soundButton = this.querySelector("#soundButton");
         musicButton === null || musicButton === void 0 ? void 0 : musicButton.addEventListener("click", function () {
             musicButton.classList.toggle("activeMusic");
+            SoundPlayer.toggleMute(SoundType.MUSIC);
             musicButton.classList.toggle("deactivatedMusic");
         });
         soundButton === null || soundButton === void 0 ? void 0 : soundButton.addEventListener("click", function () {
             soundButton.classList.toggle("activeSounds");
-            SoundPlayer.toggleMute();
+            SoundPlayer.toggleMute(SoundType.GENERAL);
             soundButton.classList.toggle("deactivatedSounds");
         });
     }
@@ -114,18 +115,41 @@ export var SoundFiles;
     SoundFiles["START"] = "gameStart.wav";
     SoundFiles["VICTORY"] = "victoryReverb.wav";
     SoundFiles["DEFEAT"] = "gameLost.wav";
+    SoundFiles["GAME_MUSIC"] = "gameMusic.ogg";
 })(SoundFiles || (SoundFiles = {}));
+export var SoundType;
+(function (SoundType) {
+    SoundType["GENERAL"] = "GENERAL";
+    SoundType["MUSIC"] = "MUSIC";
+})(SoundType || (SoundType = {}));
 export class SoundPlayer {
-    static toggleMute() {
-        this.isMuted = !this.isMuted;
+    static toggleMute(type) {
+        if (type === SoundType.GENERAL) {
+            this.isMuted = !this.isMuted;
+        }
+        else if (type === SoundType.MUSIC) {
+            this.isMusicMuted = !this.isMusicMuted;
+            if (this.musicAudio) {
+                if (this.isMusicMuted) {
+                    this.musicAudio.pause();
+                }
+                else {
+                    this.musicAudio.play();
+                }
+            }
+        }
     }
     static playSound(soundType, loopCount = 0) {
-        if (this.isMuted)
+        if (this.isMuted || (soundType === "GAME_MUSIC" && this.isMusicMuted))
             return;
         const soundFile = SoundFiles[soundType];
         const audio = new Audio(`sounds/${soundFile}`);
         if (soundType === "FAILURE") {
             audio.volume = 0.8;
+        }
+        else if (soundType === "GAME_MUSIC") {
+            audio.volume = 0.2;
+            this.musicAudio = audio;
         }
         let playedTimes = 0;
         const playOrLoop = () => {
@@ -140,6 +164,8 @@ export class SoundPlayer {
     }
 }
 SoundPlayer.isMuted = false;
+SoundPlayer.isMusicMuted = false;
+SoundPlayer.musicAudio = null;
 (() => {
     Object.values(SoundFiles).forEach((file) => {
         const audio = new Audio(`sounds/${file}`);
