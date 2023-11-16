@@ -84,7 +84,6 @@ abstract class GameMode {
   protected readonly difficulty: Difficulty;
 
   constructor(buttonId: string, difficulty: Difficulty) {
-    console.log('contructor init');
     this.button = document.getElementById(buttonId) as HTMLButtonElement;
     this.difficulty = difficulty;
     this.addListener();
@@ -131,8 +130,8 @@ class GameModeFactory {
   }
 }
 
-enum SoundFiles {
-  SUCCESS = "successBelLShort.wav",
+export enum SoundFiles {
+  SUCCESS = "successBellShort.wav",
   FAILURE = "trumpetFail.wav",
   START = "gameStart.wav",
 }
@@ -144,20 +143,19 @@ export class SoundPlayer {
     this.isMuted = !this.isMuted;
   }
 
-  static playSound(match: boolean) {
+  static playSound(soundType: keyof typeof SoundFiles) {
     if (this.isMuted) return;
 
-    const audio = new Audio(`sounds/${match ? SoundFiles.SUCCESS : SoundFiles.FAILURE}`);
-    !match && (audio.volume = 0.9)
+    const soundFile = SoundFiles[soundType];
+    const audio = new Audio(`sounds/${soundFile}`);
+
+    if (soundType === 'FAILURE') {
+      audio.volume = 0.9;
+    }
 
     audio.play();
   }
-  static playStartSound() {
-    if (this.isMuted) return;
-
-    const audio = new Audio(`sounds/${SoundFiles.START}`);
-    audio.play();
-  } 
 }
+
 
 const game = new Game();

@@ -301,7 +301,7 @@ class Board {
         const blocksMatch = firstBlock.getFigureRef().src === secondBlock.getFigureRef().src;
         this.pairTimerRunning = true;
         const timer = blocksMatch ? 500 : this.settings.timeoutSpeed;
-        SoundPlayer.playSound(blocksMatch);
+        SoundPlayer.playSound(blocksMatch ? "SUCCESS" : "FAILURE");
         !blocksMatch &&
             setTimeout(() => {
                 this.openedBlocks.forEach((b) => b.getDivElementRef().classList.toggle("notMatch"));
@@ -407,7 +407,7 @@ class Board {
         });
         this.draw();
         this.timer.startTimer(this.settings.gameLength);
-        SoundPlayer.playStartSound();
+        SoundPlayer.playSound("START");
     }
 }
 const urlParams = new URLSearchParams(window.location.search);

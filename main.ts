@@ -17,7 +17,7 @@ enum Difficulties {
 }
 
 const DifficultySettings: {
-  [key in Difficulties]: BoardSettings
+  [key in Difficulties]: BoardSettings;
 } = {
   [Difficulties.EASY]: { gameLength: 5, timeoutSpeed: 2000, size: 2 },
   [Difficulties.MEDIUM]: { gameLength: 5, timeoutSpeed: 1500, size: 4 },
@@ -97,7 +97,6 @@ class ConfettiAnimation extends Animation {
     this.confettiArray.forEach((confetti) => confetti.remove());
     this.confettiArray = [];
   }
-
 }
 
 class TimeOutAnimation extends Animation {
@@ -447,7 +446,7 @@ class Board {
     this.pairTimerRunning = true;
     const timer = blocksMatch ? 500 : this.settings.timeoutSpeed;
 
-    SoundPlayer.playSound(blocksMatch);
+    SoundPlayer.playSound(blocksMatch ? "SUCCESS" : "FAILURE");
 
     !blocksMatch &&
       setTimeout(() => {
@@ -586,7 +585,7 @@ class Board {
     });
     this.draw();
     this.timer.startTimer(this.settings.gameLength);
-    SoundPlayer.playStartSound()
+    SoundPlayer.playSound("START");
   }
 }
 

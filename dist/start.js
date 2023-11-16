@@ -68,7 +68,6 @@ class Quit {
 }
 class GameMode {
     constructor(buttonId, difficulty) {
-        console.log('contructor init');
         this.button = document.getElementById(buttonId);
         this.difficulty = difficulty;
         this.addListener();
@@ -110,9 +109,9 @@ class GameModeFactory {
         }
     }
 }
-var SoundFiles;
+export var SoundFiles;
 (function (SoundFiles) {
-    SoundFiles["SUCCESS"] = "successBelLShort.wav";
+    SoundFiles["SUCCESS"] = "successBellShort.wav";
     SoundFiles["FAILURE"] = "trumpetFail.wav";
     SoundFiles["START"] = "gameStart.wav";
 })(SoundFiles || (SoundFiles = {}));
@@ -120,17 +119,14 @@ export class SoundPlayer {
     static toggleMute() {
         this.isMuted = !this.isMuted;
     }
-    static playSound(match) {
+    static playSound(soundType) {
         if (this.isMuted)
             return;
-        const audio = new Audio(`sounds/${match ? SoundFiles.SUCCESS : SoundFiles.FAILURE}`);
-        !match && (audio.volume = 0.9);
-        audio.play();
-    }
-    static playStartSound() {
-        if (this.isMuted)
-            return;
-        const audio = new Audio(`sounds/${SoundFiles.START}`);
+        const soundFile = SoundFiles[soundType];
+        const audio = new Audio(`sounds/${soundFile}`);
+        if (soundType === 'FAILURE') {
+            audio.volume = 0.9;
+        }
         audio.play();
     }
 }
