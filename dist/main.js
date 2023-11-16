@@ -227,7 +227,7 @@ class GameStats {
     }
 }
 class GameUI {
-    // TODO Block background checkbox
+    //TODO Optimize the getting of elements
     constructor(onSpeedChange) {
         this.turnCount = document.getElementById("turnCount");
         this.matchCount = document.getElementById("matchCount");
@@ -238,12 +238,22 @@ class GameUI {
             const selectedSpeed = parseInt(this.speedSelector.value);
             onSpeedChange(selectedSpeed);
         });
+        this.backgroundCheckbox = document.getElementById("showOnlyNumbers");
+        this.backgroundCheckbox.addEventListener("change", () => {
+            // TODO Change the backgrounds of 
+            console.log(this.backgroundCheckbox.checked);
+        });
     }
     updateElementCount(count, element) {
         this[element].textContent = count;
     }
     updatePercentage(percentage) {
         this.accuracyPercentage.textContent = `${percentage.toString()}%`;
+    }
+    changeBackground(blockArray) {
+        blockArray.forEach((block) => {
+            block.getDivElementRef().classList.toggle("showOnlyNumbers");
+        });
     }
 }
 class Board {

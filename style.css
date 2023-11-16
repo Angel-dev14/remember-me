@@ -13,6 +13,8 @@ body {
   background-size: cover;
   background-position: center;
   position: relative;
+  height: 100vh;
+
 }
 
 * {
@@ -139,6 +141,7 @@ body {
   justify-content: center;
   margin: 1em auto;
   padding: 0.5em 0.8em;
+  max-height: 80vh;
 }
 
 .row {

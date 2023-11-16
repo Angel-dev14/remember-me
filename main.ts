@@ -343,8 +343,9 @@ class GameUI {
   private readonly missCount: HTMLSpanElement;
   private readonly accuracyPercentage: HTMLSpanElement;
   private readonly speedSelector: HTMLSelectElement;
-  // TODO Block background checkbox
+  private readonly backgroundCheckbox: HTMLInputElement;
 
+  //TODO Optimize the getting of elements
   constructor(onSpeedChange: (newSpeed: number) => void) {
     this.turnCount = document.getElementById("turnCount") as HTMLSpanElement;
     this.matchCount = document.getElementById("matchCount") as HTMLSpanElement;
@@ -359,6 +360,11 @@ class GameUI {
       const selectedSpeed = parseInt(this.speedSelector.value);
       onSpeedChange(selectedSpeed);
     });
+    this.backgroundCheckbox = document.getElementById("showOnlyNumbers") as HTMLInputElement;
+    this.backgroundCheckbox.addEventListener("change", () => {
+      // TODO Change the backgrounds of 
+      console.log(this.backgroundCheckbox.checked)
+    })
   }
 
   updateElementCount(count: string, element: StatKey) {
@@ -367,6 +373,12 @@ class GameUI {
 
   updatePercentage(percentage: string) {
     this.accuracyPercentage.textContent = `${percentage.toString()}%`;
+  }
+
+  changeBackground(blockArray :BlockElement[]) {
+    blockArray.forEach((block) => {
+      block.getDivElementRef().classList.toggle("showOnlyNumbers");
+    })
   }
 }
 
