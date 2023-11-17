@@ -364,10 +364,10 @@ class GameUI {
 
       blocks.forEach((block, index) => {
         if (this.backgroundCheckbox.checked) {
-          block.textContent = (index + 1).toString(); // Adds a number to each block
+          block.textContent = (index + 1).toString();
           block.classList.add("big-number");
         } else {
-          block.textContent = ""; // Reset the text content
+          block.textContent = "";
           block.classList.remove("big-number");
         }
       });
