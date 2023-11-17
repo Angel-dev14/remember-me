@@ -227,22 +227,41 @@ class GameStats {
     }
 }
 class GameUI {
-    //TODO Optimize the getting of elements
     constructor(onSpeedChange) {
-        this.turnCount = document.getElementById("turnCount");
-        this.matchCount = document.getElementById("matchCount");
-        this.missCount = document.getElementById("missCount");
-        this.accuracyPercentage = document.getElementById("accuracyPercentage");
-        this.speedSelector = document.getElementById("speedSelect");
-        this.speedSelector.addEventListener("change", () => {
+        this.turnCount = this.getElement("turnCount");
+        this.matchCount = this.getElement("matchCount");
+        this.missCount = this.getElement("missCount");
+        this.accuracyPercentage = this.getElement("accuracyPercentage");
+        this.speedSelector = this.getElement("speedSelect");
+        this.backgroundCheckbox = this.getElement("showOnlyNumbers");
+        this.setupEventListener(this.speedSelector, "change", () => {
             const selectedSpeed = parseInt(this.speedSelector.value);
             onSpeedChange(selectedSpeed);
         });
-        this.backgroundCheckbox = document.getElementById("showOnlyNumbers");
-        this.backgroundCheckbox.addEventListener("change", () => {
-            // TODO Change the backgrounds of 
-            console.log(this.backgroundCheckbox.checked);
+        this.setupEventListener(this.backgroundCheckbox, "change", () => {
+            const parentElement = this.getElement("blockContainer");
+            const blocks = parentElement.querySelectorAll(".front");
+            blocks.forEach((block, index) => {
+                if (this.backgroundCheckbox.checked) {
+                    block.textContent = (index + 1).toString(); // Adds a number to each block
+                    block.classList.add("big-number");
+                }
+                else {
+                    block.textContent = ""; // Reset the text content
+                    block.classList.remove("big-number");
+                }
+            });
+            parentElement.classList.toggle("no-background");
         });
+    }
+    getElement(id) {
+        const element = document.getElementById(id);
+        if (!element)
+            throw new Error(`Element with id '${id}' not found`);
+        return element;
+    }
+    setupEventListener(element, event, handler) {
+        element.addEventListener(event, handler);
     }
     updateElementCount(count, element) {
         this[element].textContent = count;

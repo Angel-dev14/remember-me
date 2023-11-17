@@ -13,17 +13,13 @@ body {
   background-size: cover;
   background-position: center;
   position: relative;
-  height: 100vh;
+  min-height: 100vh;
+  font-family: "Sedgwick Ave Display", cursive;
 }
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: content-box;
-}
-
-body {
-  font-family: "Sedgwick Ave Display", cursive;
 }
 
 .header {
@@ -126,9 +122,9 @@ body {
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1000;
 }
+
 .container {
   display: flex;
-  align-items: center;
   flex-direction: column;
   box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px,
     rgba(6, 24, 44, 0.65) 0px 4px 6px -1px,
@@ -140,7 +136,6 @@ body {
   justify-content: center;
   margin: 1em auto;
   padding: 0.5em 0.8em;
-  max-height: 80vh;
 }
 
 .row {
@@ -148,6 +143,7 @@ body {
   justify-content: space-around;
   align-items: center;
   gap: 1.5em;
+  flex-wrap: nowrap;
 }
 
 .column {
@@ -169,6 +165,17 @@ body {
   width: 100px;
   height: 100px;
   box-sizing: border-box;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
+
+.no-background .block .front {
+  background-image: none;
+}
+
+.big-number {
+  font-size: 2em;
+  font-weight: bold;
 }
 
 .match {
@@ -184,10 +191,16 @@ body {
 }
 
 .front {
+  display: flex;
+  justify-content: center;
+  background-color: var(--light-green);
+  align-items: center;
   background-image: url("./images/blockBg/blockForeground.png");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+  z-index: 2;
+  transform: rotateY(0deg);
 }
 
 .front:hover {
@@ -221,11 +234,6 @@ body {
   left: 0;
   width: 100px;
   height: 100px;
-}
-
-.front {
-  z-index: 2;
-  transform: rotateY(0deg);
 }
 
 .back {
@@ -279,10 +287,11 @@ body {
 
 #statsAndOptions .row {
   flex-direction: column;
-  gap: 0em;
+  gap: 0.4em;
+  margin-top: 0.5em;
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 1200px) {
   .timer-container {
     position: static;
   }
@@ -307,6 +316,10 @@ body {
     height: 75px !important;
   }
 
+  .block {
+    margin: 0.4em !important;
+  }
+
   .header-button,
   .reset-btn {
     width: 35px !important;
@@ -321,12 +334,6 @@ body {
   }
 }
 
-@media screen and (max-width: 515px) {
-  body {
-    height: 100% !important;
-  }
-}
-
 @media screen and (max-width: 450px) {
   .row {
     gap: 0.3em !important;
@@ -336,6 +343,10 @@ body {
   .block {
     width: 55px !important;
     height: 55px !important;
+  }
+
+  .block {
+    margin: 0.25em !important;
   }
 }
 

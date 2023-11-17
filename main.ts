@@ -345,26 +345,48 @@ class GameUI {
   private readonly speedSelector: HTMLSelectElement;
   private readonly backgroundCheckbox: HTMLInputElement;
 
-  //TODO Optimize the getting of elements
   constructor(onSpeedChange: (newSpeed: number) => void) {
-    this.turnCount = document.getElementById("turnCount") as HTMLSpanElement;
-    this.matchCount = document.getElementById("matchCount") as HTMLSpanElement;
-    this.missCount = document.getElementById("missCount") as HTMLSpanElement;
-    this.accuracyPercentage = document.getElementById(
-      "accuracyPercentage"
-    ) as HTMLSpanElement;
-    this.speedSelector = document.getElementById(
-      "speedSelect"
-    ) as HTMLSelectElement;
-    this.speedSelector.addEventListener("change", () => {
+    this.turnCount = this.getElement("turnCount");
+    this.matchCount = this.getElement("matchCount");
+    this.missCount = this.getElement("missCount");
+    this.accuracyPercentage = this.getElement("accuracyPercentage");
+    this.speedSelector = this.getElement("speedSelect");
+    this.backgroundCheckbox = this.getElement("showOnlyNumbers");
+
+    this.setupEventListener(this.speedSelector, "change", () => {
       const selectedSpeed = parseInt(this.speedSelector.value);
       onSpeedChange(selectedSpeed);
     });
-    this.backgroundCheckbox = document.getElementById("showOnlyNumbers") as HTMLInputElement;
-    this.backgroundCheckbox.addEventListener("change", () => {
-      // TODO Change the backgrounds of 
-      console.log(this.backgroundCheckbox.checked)
-    })
+
+    this.setupEventListener(this.backgroundCheckbox, "change", () => {
+      const parentElement = this.getElement("blockContainer");
+      const blocks = parentElement.querySelectorAll(".front");
+
+      blocks.forEach((block, index) => {
+        if (this.backgroundCheckbox.checked) {
+          block.textContent = (index + 1).toString(); // Adds a number to each block
+          block.classList.add("big-number");
+        } else {
+          block.textContent = ""; // Reset the text content
+          block.classList.remove("big-number");
+        }
+      });
+
+      parentElement.classList.toggle("no-background");
+    });
+  }
+  private getElement<T extends HTMLElement>(id: string): T {
+    const element = document.getElementById(id);
+    if (!element) throw new Error(`Element with id '${id}' not found`);
+    return element as T;
+  }
+
+  private setupEventListener(
+    element: HTMLElement,
+    event: string,
+    handler: () => void
+  ) {
+    element.addEventListener(event, handler);
   }
 
   updateElementCount(count: string, element: StatKey) {
@@ -375,10 +397,10 @@ class GameUI {
     this.accuracyPercentage.textContent = `${percentage.toString()}%`;
   }
 
-  changeBackground(blockArray :BlockElement[]) {
+  changeBackground(blockArray: BlockElement[]) {
     blockArray.forEach((block) => {
       block.getDivElementRef().classList.toggle("showOnlyNumbers");
-    })
+    });
   }
 }
 
