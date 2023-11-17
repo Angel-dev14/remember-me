@@ -14,7 +14,6 @@ body {
   background-position: center;
   position: relative;
   height: 100vh;
-
 }
 
 * {
@@ -156,7 +155,6 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 1em 0;
   gap: 0.4em;
 }
 
@@ -299,7 +297,7 @@ body {
 
 @media screen and (max-width: 980px) {
   .row {
-    gap: 1em !important;
+    gap: 0.8em !important;
     flex-wrap: wrap;
   }
 
@@ -320,6 +318,12 @@ body {
   }
   .logo {
     width: 35px !important;
+  }
+}
+
+@media screen and (max-width: 515px) {
+  body {
+    height: 100% !important;
   }
 }
 
