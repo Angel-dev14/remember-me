@@ -62,6 +62,10 @@
     gap: 1em;
   }
 
+  .header-buttons {
+    justify-content: end;
+  }
+
   .row-bottom {
     width: fit-content;
     margin: 0 auto;
