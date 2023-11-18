@@ -45,14 +45,11 @@ export const Header = class Header extends HTMLElement {
 customElements.define("custom-header", Header);
 
 class Game {
-  private readonly gameModes: GameMode[];
   private readonly quitBtn: Quit;
 
   constructor() {
-    this.gameModes = [];
     Object.values(Difficulty).forEach((diff) => {
       const gameMode = GameModeFactory.create(diff);
-      this.gameModes.push(gameMode);
     });
     this.quitBtn = new Quit();
   }
@@ -203,4 +200,4 @@ export class SoundPlayer {
   }
 }
 
-const game = new Game();
+new Game();
