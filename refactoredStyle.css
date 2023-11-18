@@ -24,7 +24,7 @@
   }
   
   /* Header styles */
-  .header {
+  .header, .footer {
     text-align: center;
     display: flex;
     justify-content: space-between;
@@ -32,7 +32,20 @@
     background-color: var(--dark-blue);
   }
   
-  .header > *, .header a {
+
+  .footer {
+    padding: 0.4em 1em;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+  }
+
+  .footer a {
+    color: white;
+  }
+  
+
+  .header > *, .header a, .footer > *, .header a {
     font-family: "Sedgwick Ave Display", cursive;
     color: white;
     padding: 5px 0;
@@ -348,6 +361,7 @@
   
   .options {
     margin-top: 2em;
+    position: relative;
   }
   
   .option {

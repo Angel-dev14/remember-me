@@ -41,7 +41,26 @@ export const Header = class Header extends HTMLElement {
         });
     }
 };
+export const Footer = class Footer extends HTMLElement {
+    connectedCallback() {
+        this.innerHTML = `
+    <div class="footer">
+    <div class="row">
+    <p>Made with ❤️ by <a href="https://github.com/JustAnotherHeroRiding" target="_blank">JustAnotherHeroRiding</a></p>
+    <i class="fa-brands fa-github logo" style="color: #ffb703;"></i>
+    </a>
+    </div>
+    <div class="row">
+    <i class="fa-brands fa-github logo" style="color: #ffb703;"></i>
+    <p>Made with ❤️ by <a href="https://github.com/Angel-dev14" target="_blank">Angel-dev14</a></p>
+    </a>
+    </div>
+    </div>
+      `;
+    }
+};
 customElements.define("custom-header", Header);
+customElements.define("custom-footer", Footer);
 class Game {
     constructor() {
         this.gameModes = [];
