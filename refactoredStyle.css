@@ -238,7 +238,7 @@
   }
   
   .timer-container {
-    background-color: var(--light-blue);
+    background-color: var(--off-white);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -289,7 +289,7 @@
   
   #gameTimer {
     font-size: 3.5em;
-    color: var(--off-white);
+    color: black;
   }
   
   /* Start game and menu styles */
@@ -429,15 +429,51 @@
   }
 }
 
-@media screen and (max-width: 450px) {
+@media screen and (max-width: 620px) {
+
   .row {
     gap: 0.3em !important;
   }
   .block *, .block {
-    width: 55px !important;
-    height: 55px !important;
+    width: 60px !important;
+    height: 60px !important;
   }
   .block {
-    margin: 0.25em !important;
+    margin: 0.35em !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+
+  .timer-container {
+
+  }
+
+  #gameTimer {
+    font-size: 2em;
+  }
+
+  .row {
+    gap: 0.3em !important;
+  }
+  .block *, .block {
+    width: 45px !important;
+    height: 45px !important;
+  }
+  .block {
+    margin: 0.2em !important;
+  }
+}
+
+@media screen and (max-width: 352px) {
+  .row {
+    gap: 0.25em !important;
+  }
+  .block *, .block {
+    width: 35px !important;
+    height: 35px !important;
+  }
+  .block {
+    margin: 0.2em !important;
   }
 }

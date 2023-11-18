@@ -404,9 +404,7 @@ class Board {
                 addedFields[field] = 1;
             }
         }
-        return blocksArray;
-        // Uncomment this to return shuffled blocks instead
-        //return this.shuffleBlocks(blocksArray);
+        return this.shuffleBlocks(blocksArray);
     }
     shuffleBlocks(blocksArray) {
         let currentIndex = blocksArray.length, randomIndex;
