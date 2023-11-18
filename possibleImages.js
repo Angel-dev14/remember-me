@@ -10,4 +10,14 @@ exports.fields = [
     "giraffe",
     "penguin",
     "rabbit",
+    "bear",
+    "elephant",
+    "frog",
+    "giraffe",
+    "horse",
+    "kangaroo",
+    "squirrel",
+    "zebra",
+    "hippo",
+    "tiger"
 ];

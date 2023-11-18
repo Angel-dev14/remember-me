@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es6",               // Specify ECMAScript target version
-    "module": "es6",               // Specify module code generation
+    "target": "ES6",               // Specify ECMAScript target version
+    "module": "ES6",               // Specify module code generation
     "lib": ["ES2017", "dom"],         // Specify library files to be included in the compilation
     "outDir": "./dist",            // Redirect output structure to the directory
     "rootDir": ".",            // Specify the root directory of input files

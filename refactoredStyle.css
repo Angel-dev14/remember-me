@@ -1,0 +1,443 @@
+/* Root variables */
+:root {
+    --light-blue: #8ecae6;
+    --medium-blue: #219ebc;
+    --dark-blue: #023047;
+    --yellowish-orange: #ffb703;
+    --orange: #fb8500;
+    --off-white: #f1faee;
+    --light-green: #a7c957;
+  }
+  
+  /* Base styles */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    background: url("./images/backgrounds/wallBgSmaller.jpg") no-repeat center / cover;
+    position: relative;
+    min-height: 100vh;
+    font-family: "Sedgwick Ave Display", cursive;
+  }
+  
+  /* Header styles */
+  .header, .footer {
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--dark-blue);
+  }
+  
+
+  .footer {
+    padding: 0.4em 1em;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+  }
+
+  .footer a {
+    color: white;
+  }
+
+  .logo-button {
+    width: 100%;
+  }
+
+  .header > *, .header a, .footer > *, .footer a {
+    font-family: "Sedgwick Ave Display", cursive;
+    color: white;
+    padding: 5px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .logo, .title {
+    font-size: 2.5em;
+  }
+  
+  .header img {
+    cursor: pointer;
+    border-radius: 20px;
+  }
+  
+  /* Layout styles */
+
+  .logo-title, .header-buttons, .row, .column, .row-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+  }
+
+  .header-buttons {
+    margin: 0 10px;
+  }
+
+  .row-bottom {
+    width: fit-content;
+    margin: 0 auto;
+    flex-wrap: wrap;
+  }
+  
+  
+  /* Button styles */
+  .header-button, .reset-btn, .quit-game {
+    background-size: cover;
+    width: 50px;
+    height: 50px;
+    border: none;
+    border-radius: 40px;
+    outline: none;
+    cursor: pointer;
+    padding: 0;
+  }
+  
+  /* Button states */
+  .activeMusic { background-image: url("images/soundSettings/musicOn.png"); }
+  .deactivatedMusic { background-image: url("images/soundSettings/musicOff.png"); }
+  .activeSounds { background-image: url("images/soundSettings/soundsOn.png"); }
+  .deactivatedSounds { background-image: url("images/soundSettings/soundsOff.png"); }
+  
+  .reset-btn { background-image: url("images/resetIcon2.png"); }
+  .reset-btn:hover, .quit-game:hover { opacity: 0.8; }
+  
+  /* Container and modal styles */
+  .modal-parent {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+  
+  .container {
+    display: flex;
+    flex-direction: column;
+    box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px,
+                rgba(6, 24, 44, 0.65) 0px 4px 6px -1px,
+                rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+    background-color: var(--off-white);
+    border-radius: 20px;
+    width: fit-content;
+    align-items: center;
+    justify-content: center;
+    margin: 1em auto;
+    padding: 0.5em 0.8em;
+  }
+  
+  /* Grid layout styles */
+  .row {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 1.5em;
+    flex-wrap: nowrap;
+  }
+  
+  .column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4em;
+  }
+  
+  /* Block styles */
+  .container .block {
+    margin: 0.5em;
+    cursor: pointer;
+    perspective: 1000px;
+    width: 100px;
+    height: 100px;
+    box-sizing: border-box;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+                rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, 
+                rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  }
+  
+  .no-background .block .front { background-image: none; }
+  .big-number { font-size: 2em; font-weight: bold; }
+  .match { border: var(--light-green) 2px solid; box-shadow: rgba(167, 201, 87, 0.4) 5px 5px; cursor: auto !important; }
+  .notMatch { border: var(--orange) 2px solid; box-shadow: rgba(251, 131, 0, 0.4) 5px 5px; cursor: auto !important; }
+  
+  .front {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--light-green);
+    background-image: url("./images/blockBg/blockForeground.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    z-index: 2;
+    transform: rotateY(0deg);
+  }
+  
+  .front:hover { background-image: url("./images/blockBg/blockHover.png"); }
+  
+/* Block and flipper styles */
+.block img {
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE 10+ */
+    user-select: none; /* Standard syntax */
+    width: inherit;
+    height: inherit;
+  }
+  
+  .flip-container .flipper {
+    transition: 0.6s;
+    transform-style: preserve-3d;
+    position: relative;
+  }
+  
+  .flip-container .flipper.flip {
+    transform: rotateY(180deg);
+  }
+  
+  .front, .back {
+    backface-visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100px;
+    height: 100px;
+  }
+  
+  .back {
+    transform: rotateY(180deg);
+  }
+  
+  /* Game over and timer styles */
+  .game-over-fall {
+    position: fixed;
+    top: 0;
+    font-size: 1.6rem;
+    animation: game-over-fall linear 5s infinite;
+  }
+  
+  @keyframes game-over-fall {
+    0% {
+      transform: translateY(-100%) rotate(0);
+    }
+    100% {
+      transform: translateY(100vh) rotate(180deg);
+    }
+  }
+  
+  .timer-container {
+    background-color: var(--light-blue);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    padding: 1em 0.8em;
+    border-radius: 10px;
+    font-size: 1.2em;
+    font-family: "Inconsolata", monospace;
+    box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px,
+                rgba(6, 24, 44, 0.65) 0px 4px 6px -1px,
+                rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+    position: absolute;
+    left: 0.5em;
+    top: 4em;
+  }
+  
+  #statsAndOptions {
+    position: absolute;
+    right: 0.5em;
+    top: 4em;
+  }
+  
+  #statsAndOptions .row {
+    flex-direction: column;
+    gap: 0.4em;
+    margin-top: 0.5em;
+  }
+  
+  /* Responsive design */
+  @media screen and (max-width: 1200px) {
+    .timer-container, #statsAndOptions {
+      position: static;
+    }
+    #statsAndOptions .row {
+      flex-direction: row;
+    }
+  }
+
+  
+  /* Game over message and timer styles */
+  #gameoverMessage {
+    text-align: center;
+    font-family: "Sedgwick Ave Display", cursive;
+    font-size: 4em;
+    margin: 0.5em 0;
+  }
+  
+  #gameTimer {
+    font-size: 3.5em;
+    color: var(--off-white);
+  }
+  
+  /* Start game and menu styles */
+  .start-game {
+    /*position: relative;*/
+    /*top: 2.5em;*/
+    padding: 10px 0;
+    width: 80%;
+    text-align: center;
+    margin: 0 auto;
+  }
+  
+  .title {
+    font-size: 3em;
+  }
+  
+  .menu-header {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    margin: 0 auto;
+    background-color: var(--off-white);
+    padding: 1em 1.5em;
+    border-radius: 20px;
+    box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px,
+                rgba(6, 24, 44, 0.65) 0px 4px 6px -1px,
+                rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+  }
+  
+  /* Description text and options styles */
+  .desc-text {
+    font-size: 1.5em;
+  }
+  
+  .options {
+    margin: 2em auto;
+    width: 50%;
+    position: relative;
+  }
+  
+  .option {
+    width: 100%;
+    text-transform: uppercase;
+    padding: 1em 0;
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 0.5em auto;
+    box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0,
+                rgba(60, 64, 67, 0.15) 0 1px 3px 1px;
+  }
+  
+  .option:hover {
+    transform: scale(1.02);
+    cursor: pointer;
+  }
+  
+  .easy, .medium, .hard {
+    background-color: var(--light-blue);
+    color: white;
+  }
+  
+  .medium { background-color: var(--medium-blue); }
+  .hard { background-color: var(--dark-blue); }
+  
+  .quit {
+    display: block;
+    background-color: var(--orange);
+    /*margin-top: 3em;*/
+  }
+  
+  /* Quit game and marker styles */
+  .quit-game {
+    background-size: cover;
+    width: 50px;
+    height: 50px;
+    border-radius: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    background-image: url("images/quitIcon.png");
+  }
+  
+  .quit-game:hover {
+    background-color: var(--orange);
+  }
+  
+  .red-x-mark, .gameover-x-mark {
+    color: red;
+    font-size: 2em;
+    margin-right: 0.3em;
+  }
+  
+  .gameover-x-mark {
+    position: relative;
+    left: 3em;
+    padding: 0.1em 0.2em;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  
+  .gameover-x-mark:hover {
+    background-color: var(--yellowish-orange);
+  }
+
+
+@media screen and (max-width: 980px) {
+
+  .header-buttons {
+    width: 100px;
+  }
+
+  .options {
+    width: 100%;
+  }
+
+  .row {
+    gap: 0.8em !important;
+    flex-wrap: wrap;
+  }
+  .block *, .block {
+    width: 75px !important;
+    height: 75px !important;
+  }
+  .block {
+    margin: 0.4em !important;
+  }
+  .header-button, .reset-btn {
+    width: 35px !important;
+    height: 35px !important;
+  }
+  .title {
+    font-size: 1.5em !important;
+  }
+  .logo {
+    width: 35px !important;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .row {
+    gap: 0.3em !important;
+  }
+  .block *, .block {
+    width: 55px !important;
+    height: 55px !important;
+  }
+  .block {
+    margin: 0.25em !important;
+  }
+}

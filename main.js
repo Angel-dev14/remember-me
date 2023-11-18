@@ -1,47 +1,108 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 var possibleImages_js_1 = require("./possibleImages.js");
+var start_js_1 = require("./start.js");
+var ANIMATION_LENGTH = 6000;
+var BLOCK_OPEN_ANIMATION_LENGTH = 600;
+var Difficulties;
+(function (Difficulties) {
+    Difficulties["EASY"] = "EASY";
+    Difficulties["MEDIUM"] = "MEDIUM";
+    Difficulties["HARD"] = "HARD";
+})(Difficulties || (Difficulties = {}));
+var DifficultySettings = (_a = {},
+    _a[Difficulties.EASY] = { gameLength: 5, timeoutSpeed: 2000, size: 2 },
+    _a[Difficulties.MEDIUM] = { gameLength: 5, timeoutSpeed: 1500, size: 4 },
+    _a[Difficulties.HARD] = { gameLength: 3, timeoutSpeed: 1000, size: 6 },
+    _a);
 var Animation = /** @class */ (function () {
-    function Animation(h2Element) {
-        this.gameoverMessage = h2Element;
-    }
-    Animation.prototype.showConfetti = function () {
+    function Animation(elementRef) {
         var _this = this;
-        // Number of pieces of confetti to throw
-        var confettiCount = 200;
-        // Array to store the confetti
-        var confettiArray = [];
-        // Create the confetti pieces and add them to the array
-        for (var i = 0; i < confettiCount; i++) {
-            var confetti = document.createElement("div");
-            confetti.classList.add("confetti");
-            confetti.textContent = "🎉";
-            confetti.style.left = "".concat(Math.random() * 100, "vw");
-            confetti.style.animationDuration = "".concat(Math.random() * 2 + 3, "s");
-            confettiArray.push(confetti);
+        var _a;
+        this.headingElementRef = elementRef;
+        this.parentContainerRef = document.getElementById("gameoverParent");
+        (_a = this.parentContainerRef
+            .querySelector(".gameover-x-mark")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", function () {
+            _this.parentContainerRef.style.display = "none";
+            _this.headingElementRef.textContent = "";
+        });
+    }
+    Animation.prototype.animateElements = function (emoji, finalMessage, count) {
+        var _this = this;
+        var elementsArray = [];
+        for (var i = 0; i < count; i++) {
+            var element = ImprovedElementCreator.createElement(ElementType.DIV, "game-over-fall", undefined, emoji);
+            element.style.left = "".concat(Math.random() * 100, "vw");
+            element.style.animationDuration = "".concat(Math.random() * 2 + 3, "s");
+            elementsArray.push(element);
+            document.body.appendChild(element);
         }
-        // Function to start the confetti animation
-        var startConfetti = function () {
-            if (_this.gameoverMessage) {
-                _this.gameoverMessage.textContent = "You Won!";
-            }
-            confettiArray.forEach(function (confetti) {
-                document.body.appendChild(confetti);
+        setTimeout(function () {
+            var _a;
+            _this.parentContainerRef.style.display = "flex";
+            _this.headingElementRef.textContent = finalMessage;
+            (_a = _this.parentContainerRef
+                .querySelector(".reset-btn")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", function () {
+                localStorage.setItem("playStartSound", "true");
+                location.reload();
             });
-        };
-        // Function to stop the confetti animation
-        var stopConfetti = function () {
-            confettiArray.forEach(function (confetti) {
-                confetti.remove();
-            });
-        };
-        // Start the confetti animation
-        startConfetti();
-        // Stop the confetti animation after 5 seconds
-        setTimeout(stopConfetti, 5000);
+        }, ANIMATION_LENGTH);
+        return elementsArray;
+    };
+    Animation.prototype.clearElements = function (elementsArray) {
+        elementsArray.forEach(function (element) { return element.remove(); });
+        elementsArray.length = 0;
     };
     return Animation;
 }());
+var ConfettiAnimation = /** @class */ (function (_super) {
+    __extends(ConfettiAnimation, _super);
+    function ConfettiAnimation(headingElementRef) {
+        var _this = _super.call(this, headingElementRef) || this;
+        _this.confettiArray = [];
+        _this.confettiCount = 200;
+        return _this;
+    }
+    ConfettiAnimation.prototype.start = function () {
+        this.confettiArray = this.animateElements("🎉", "You won", this.confettiCount);
+    };
+    ConfettiAnimation.prototype.stop = function () {
+        this.clearElements(this.confettiArray);
+    };
+    return ConfettiAnimation;
+}(Animation));
+var TimeOutAnimation = /** @class */ (function (_super) {
+    __extends(TimeOutAnimation, _super);
+    function TimeOutAnimation(headingElementRef) {
+        var _this = _super.call(this, headingElementRef) || this;
+        _this.gameOverElements = [];
+        _this.clockCount = 200;
+        return _this;
+    }
+    TimeOutAnimation.prototype.start = function () {
+        this.gameOverElements = this.animateElements("⏰", "Time's Up!", this.clockCount);
+    };
+    TimeOutAnimation.prototype.stop = function () {
+        this.clearElements(this.gameOverElements);
+    };
+    return TimeOutAnimation;
+}(Animation));
 var ElementType;
 (function (ElementType) {
     ElementType["DIV"] = "div";
@@ -50,150 +111,334 @@ var ElementType;
 var ImprovedElementCreator = /** @class */ (function () {
     function ImprovedElementCreator() {
     }
-    ImprovedElementCreator.createElement = function (elementType) {
-        return document.createElement(elementType);
+    ImprovedElementCreator.createElement = function (elementType, classes, size, textContent) {
+        var _a;
+        var element = document.createElement(elementType);
+        if (!classes) {
+            return element;
+        }
+        if (typeof classes === "string") {
+            element.classList.add(classes);
+        }
+        else {
+            (_a = element.classList).add.apply(_a, classes);
+        }
+        if (size) {
+            var width = size[0], height = size[1];
+            element.style.width = "".concat(width, "px");
+            element.style.height = "".concat(height, "px");
+        }
+        if (textContent) {
+            element.textContent = textContent;
+        }
+        return element;
     };
     return ImprovedElementCreator;
 }());
-var ElementCreator = /** @class */ (function () {
-    function ElementCreator(name, width, height, image, style, className) {
-        this.name = name;
-        this.width = width;
-        this.height = height;
-        if (image) {
-            this.image = image;
-        }
-        if (style) {
-            this.style = style;
-        }
-        if (className) {
-            this.className = className;
-        }
-    }
-    ElementCreator.prototype.createDiv = function () {
-        var div = document.createElement("div");
-        div.style.width = this.width + "px";
-        div.style.height = this.height + "px";
-        if (this.className) {
-            div.classList.add(this.className ? this.className : "");
-        }
-        if (this.style) {
-            Object.assign(div.style, this.style);
-        }
-        return div;
-    };
-    ElementCreator.prototype.createImg = function () {
-        var img = document.createElement("img");
-        img.src = this.image ? this.image : "";
-        img.style.width = this.width + "px";
-        img.style.height = this.height + "px";
-        if (this.className) {
-            img.classList.add(this.className ? this.className : "");
-        }
-        if (this.style) {
-            Object.assign(img.style, this.style);
-        }
-        return img;
-    };
-    ElementCreator.prototype.createElement = function () {
-        switch (this.name.toUpperCase()) {
-            case "DIV":
-                return this.createDiv();
-            case "IMG":
-                return this.createImg();
-        }
-    };
-    return ElementCreator;
-}());
 var BlockElement = /** @class */ (function () {
-    function BlockElement(name, width, height) {
+    function BlockElement(name, figure, onClick) {
         this.name = name;
-        this.width = width;
-        this.height = height;
+        this.figure = figure;
+        this.onClick = onClick;
+        this.div = this.createBlock();
+        var ref = this;
+        this.clickHandler = this.click.bind(ref);
+        this.div.addEventListener("click", this.clickHandler);
     }
     BlockElement.prototype.createBlock = function () {
-        var divElement = ImprovedElementCreator.createElement(ElementType.DIV);
-        divElement.style.width = "".concat(this.width, "px");
-        divElement.style.height = "".concat(this.width, "px");
-        divElement.classList.add("block");
+        var divElement = ImprovedElementCreator.createElement(ElementType.DIV, [
+            "block",
+            "flip-container",
+        ]);
+        var flipper = ImprovedElementCreator.createElement(ElementType.DIV, "flipper");
+        var front = ImprovedElementCreator.createElement(ElementType.DIV, "front");
+        var back = ImprovedElementCreator.createElement(ElementType.DIV, "back");
+        flipper.appendChild(front);
+        flipper.appendChild(back);
+        divElement.appendChild(flipper);
         return divElement;
+    };
+    BlockElement.prototype.getDivElementRef = function () {
+        return this.div;
+    };
+    BlockElement.prototype.getFigureRef = function () {
+        return this.figure.getImgElementRef();
+    };
+    BlockElement.prototype.click = function () {
+        this.onClick && this.onClick(this);
+    };
+    BlockElement.prototype.open = function () {
+        var _a;
+        var back = this.div.querySelector(".back");
+        back && back.appendChild(this.figure.getImgElementRef());
+        (_a = this.div.querySelector(".flipper")) === null || _a === void 0 ? void 0 : _a.classList.toggle("flip");
+    };
+    BlockElement.prototype.reset = function (match) {
+        var _this = this;
+        var flipper = this.div.querySelector(".flipper");
+        var back = this.div.querySelector(".back");
+        if (match) {
+            this.div.classList.toggle("match");
+            this.div.removeEventListener("click", this.clickHandler);
+        }
+        else {
+            if (flipper && back) {
+                flipper.classList.remove("flip");
+                this.div.classList.toggle("notMatch");
+                setTimeout(function () {
+                    back.removeChild(_this.figure.getImgElementRef());
+                }, BLOCK_OPEN_ANIMATION_LENGTH);
+            }
+        }
     };
     return BlockElement;
 }());
 var Figure = /** @class */ (function () {
-    function Figure() {
+    function Figure(link) {
+        this.img = ImprovedElementCreator.createElement(ElementType.IMG);
+        this.img.src = link;
     }
+    Figure.prototype.getImgElementRef = function () {
+        return this.img;
+    };
     return Figure;
 }());
-var Block = /** @class */ (function () {
-    function Block(name, width, height, image, openFunction) {
-        this.name = name;
-        this.width = width;
-        this.height = height;
-        this.image = image;
+var Timer = /** @class */ (function () {
+    function Timer(updateTimeCallback) {
+        this.intervalId = null;
+        this.seconds = 0;
+        this.updateTimeCallback = updateTimeCallback;
     }
-    Block.prototype.setOpenFunction = function (openFunction) {
-        this.openFunction = openFunction;
+    Timer.prototype.startTimer = function (gameLength) {
+        var _this = this;
+        this.seconds = gameLength * 60;
+        this.updateTime();
+        this.intervalId = window.setInterval(function () {
+            _this.seconds--;
+            var color;
+            switch (_this.seconds) {
+                case 59:
+                    color = "#ffb703";
+                    break;
+                case 30:
+                    color = "#e63946";
+                    break;
+            }
+            _this.updateTime(color);
+            if (_this.seconds <= 0) {
+                _this.stopTimer();
+            }
+        }, 1000);
     };
-    // Created a single function for opening so that we can later disable the event listener
-    // When disabling an event listener we need to pass the same exact function that was initially passed
-    // Anonymous functions cannot be later disabled
-    Block.prototype.getOpenFunction = function () {
-        return this.openFunction;
-    };
-    Block.prototype.getAttributes = function () {
-        return {
-            name: this.name,
-            width: this.width,
-            height: this.height,
-            image: this.image,
-        };
-    };
-    Block.prototype.setElement = function (element) {
-        switch (element.tagName) {
-            case "DIV":
-                this.divElement = element;
-                break;
-            case "IMG":
-                this.imageElement = element;
-                break;
+    Timer.prototype.stopTimer = function () {
+        if (this.intervalId !== null) {
+            clearInterval(this.intervalId);
+            this.intervalId = null;
         }
     };
-    Block.prototype.getElement = function (elementName) {
-        switch (elementName.toUpperCase()) {
-            case "DIV":
-                return this.divElement;
-            case "IMG":
-                return this.imageElement;
-        }
+    Timer.prototype.updateTime = function (color) {
+        var minutes = Math.floor(this.seconds / 60);
+        var remainingSeconds = this.seconds % 60;
+        var timeString = "".concat(minutes, ":").concat(remainingSeconds < 10 ? "0" : "").concat(remainingSeconds);
+        this.updateTimeCallback(timeString, color);
     };
-    Block.prototype.deleteElement = function (element) {
-        var _a, _b;
-        switch (element.tagName) {
-            case "DIV":
-                (_a = this.divElement) === null || _a === void 0 ? void 0 : _a.remove();
-                break;
-            case "IMG":
-                (_b = this.imageElement) === null || _b === void 0 ? void 0 : _b.remove();
-                break;
-            default:
-                break;
-        }
+    return Timer;
+}());
+var GameStats = /** @class */ (function () {
+    function GameStats() {
+        this.turnCount = 0;
+        this.matchCount = 0;
+        this.missCount = 0;
+    }
+    GameStats.prototype.increment = function (stat) {
+        this[stat] += 1;
     };
-    return Block;
+    GameStats.prototype.get = function (stat) {
+        return this[stat];
+    };
+    GameStats.prototype.resetStats = function () {
+        this.turnCount = 0;
+        this.matchCount = 0;
+        this.missCount = 0;
+    };
+    return GameStats;
+}());
+var GameUI = /** @class */ (function () {
+    function GameUI(onSpeedChange) {
+        var _this = this;
+        this.turnCount = this.getElement("turnCount");
+        this.matchCount = this.getElement("matchCount");
+        this.missCount = this.getElement("missCount");
+        this.accuracyPercentage = this.getElement("accuracyPercentage");
+        this.speedSelector = this.getElement("speedSelect");
+        this.backgroundCheckbox = this.getElement("showOnlyNumbers");
+        this.setupEventListener(this.speedSelector, "change", function () {
+            var selectedSpeed = parseInt(_this.speedSelector.value);
+            onSpeedChange(selectedSpeed);
+        });
+        this.setupEventListener(this.backgroundCheckbox, "change", function () {
+            var parentElement = _this.getElement("blockContainer");
+            var blocks = parentElement.querySelectorAll(".front");
+            blocks.forEach(function (block, index) {
+                if (_this.backgroundCheckbox.checked) {
+                    block.textContent = (index + 1).toString();
+                    block.classList.add("big-number");
+                }
+                else {
+                    block.textContent = "";
+                    block.classList.remove("big-number");
+                }
+            });
+            parentElement.classList.toggle("no-background");
+        });
+    }
+    GameUI.prototype.getElement = function (id) {
+        var element = document.getElementById(id);
+        if (!element)
+            throw new Error("Element with id '".concat(id, "' not found"));
+        return element;
+    };
+    GameUI.prototype.setupEventListener = function (element, event, handler) {
+        element.addEventListener(event, handler);
+    };
+    GameUI.prototype.updateElementCount = function (count, element) {
+        this[element].textContent = count;
+    };
+    GameUI.prototype.updatePercentage = function (percentage) {
+        this.accuracyPercentage.textContent = "".concat(percentage.toString(), "%");
+    };
+    return GameUI;
 }());
 var Board = /** @class */ (function () {
-    function Board(size) {
-        this.remainingBlocks = size * size;
-        this.container = document.querySelector(".container");
+    function Board(settings) {
+        this.matchedPairs = 0;
+        this.pairTimerRunning = false;
+        this.isGameActive = false;
+        this.gameStats = new GameStats();
+        this.gameUI = new GameUI(this.handleSpeedChange.bind(this));
+        this.gameTimeRef = document.getElementById("gameTimer");
+        this.timer = new Timer(this.updateTimeDisplay.bind(this));
+        this.settings = settings;
+        this.size = settings.size;
+        this.boardSize = settings.size * settings.size;
+        this.container = document.querySelector("#blockContainer");
+        this.limit = 2;
+        this.openedBlocks = [];
+        this.blocks = [];
+        document.body.style.backgroundImage =
+            "url(./images/backgrounds/containersBgSmaller.jpg)";
+        var blocksArray = this.createBlockArray();
+        for (var i = 0; i < settings.size; i++) {
+            this.blocks[i] = [];
+            for (var j = 0; j < settings.size; j++) {
+                this.blocks[i][j] = blocksArray[i * settings.size + j];
+            }
+        }
+    }
+    Board.prototype.handleSpeedChange = function (newSpeed) {
+        this.settings.timeoutSpeed = newSpeed;
+    };
+    Board.prototype.updateTimeDisplay = function (timeString, color) {
+        this.gameTimeRef.textContent = timeString;
+        if (color) {
+            this.gameTimeRef.style.color = color;
+        }
+        if (timeString === "0:00") {
+            this.gameOver("timeOut");
+        }
+    };
+    Board.prototype.openBlock = function (block) {
+        if (!this.isGameActive || this.pairTimerRunning) {
+            return;
+        }
+        else if (!this.openedBlocks.includes(block) &&
+            !(this.openedBlocks.length >= this.limit)) {
+            block.open();
+            this.openedBlocks.push(block);
+        }
+        if (this.openedBlocks.length === this.limit) {
+            this.updateTurnCount();
+            this.pairCheck();
+        }
+    };
+    Board.prototype.pairCheck = function () {
+        var _this = this;
+        var firstBlock = this.openedBlocks[0];
+        var secondBlock = this.openedBlocks[1];
+        var blocksMatch = firstBlock.getFigureRef().src === secondBlock.getFigureRef().src;
+        this.pairTimerRunning = true;
+        var timer = blocksMatch ? 500 : this.settings.timeoutSpeed;
+        start_js_1.SoundPlayer.playSound(blocksMatch ? "SUCCESS" : "FAILURE");
+        !blocksMatch &&
+            setTimeout(function () {
+                _this.openedBlocks.forEach(function (b) {
+                    return b.getDivElementRef().classList.toggle("notMatch");
+                });
+            }, BLOCK_OPEN_ANIMATION_LENGTH);
+        setTimeout(function () {
+            _this.updateStats(blocksMatch);
+            _this.resetPair(blocksMatch);
+        }, timer);
+    };
+    Board.prototype.resetPair = function (blocksMatch) {
+        var _this = this;
+        this.openedBlocks.forEach(function (b) { return b.reset(blocksMatch); });
+        this.openedBlocks = [];
+        if (blocksMatch) {
+            this.matchedPairs++;
+            if (this.matchedPairs === this.boardSize / 2) {
+                this.gameOver("victory");
+            }
+        }
+        setTimeout(function () {
+            _this.pairTimerRunning = false;
+        }, BLOCK_OPEN_ANIMATION_LENGTH);
+    };
+    Board.prototype.updateStats = function (blocksMatch) {
+        this.gameStats.increment(blocksMatch ? "matchCount" : "missCount");
+        this.gameUI.updateElementCount(this.gameStats.get("matchCount").toString(), "matchCount");
+        this.gameUI.updateElementCount(this.gameStats.get("missCount").toString(), "missCount");
+        this.gameUI.updatePercentage(((this.gameStats.get("matchCount") / this.gameStats.get("turnCount")) *
+            100).toFixed(1));
+    };
+    Board.prototype.updateTurnCount = function () {
+        this.gameStats.increment("turnCount");
+        this.gameUI.updateElementCount(this.gameStats.get("turnCount").toString(), "turnCount");
+    };
+    Board.prototype.gameOver = function (src) {
+        this.timer.stopTimer();
+        this.isGameActive = false;
+        var gameOverHeadingRef = document.getElementById("gameoverMessage");
+        switch (src) {
+            case "victory":
+                start_js_1.SoundPlayer.playSound("VICTORY", 2);
+                var confettiAnimation_1 = new ConfettiAnimation(gameOverHeadingRef);
+                confettiAnimation_1.start();
+                setTimeout(function () {
+                    confettiAnimation_1.stop();
+                }, ANIMATION_LENGTH);
+                break;
+            case "timeOut":
+                start_js_1.SoundPlayer.playSound("DEFEAT", 2);
+                var timeOutAnimation_1 = new TimeOutAnimation(gameOverHeadingRef);
+                timeOutAnimation_1.start();
+                setTimeout(function () { return timeOutAnimation_1.stop(); }, ANIMATION_LENGTH);
+                break;
+            case "quit":
+                var baseUrl = window.location.href.split("/").slice(0, -1).join("/");
+                window.location.href = baseUrl;
+                break;
+        }
+    };
+    Board.prototype.createBlockArray = function () {
+        var blocksArray = [];
         var addedFields = {};
-        // Creating a 1d array in order to be shuffled later
-        var flatBlocks = [];
-        for (var i = 0; i < size * size; i++) {
+        for (var i = 0; i < this.boardSize; i++) {
             var field = possibleImages_js_1.fields[0];
-            var block = new BlockElement("block", 100, 100);
-            // flatBlocks.push(new Block("block", 100, 100, field.concat(".png")));
-            flatBlocks.push(block);
+            var link = "images/AnimalsNew/".concat(field, ".png");
+            var figure = new Figure(link);
+            var block = new BlockElement("block", figure, this.openBlock.bind(this));
+            blocksArray.push(block);
             if (addedFields[field] == 1) {
                 addedFields[field] = addedFields[field] + 1;
                 possibleImages_js_1.fields.shift();
@@ -202,18 +447,10 @@ var Board = /** @class */ (function () {
                 addedFields[field] = 1;
             }
         }
-        // flatBlocks = this.shuffleBlocks(flatBlocks);
-        //
-        // this.blocks = [];
-        // for (let i = 0; i < size; i++) {
-        //   this.blocks[i] = [];
-        //   for (let j = 0; j < size; j++) {
-        //     // Multiplying i with size to get the current row as we are working with a 1d array
-        //     this.blocks[i][j] = flatBlocks[i * size + j];
-        //   }
-        // }
-        this.openedBlocks = [];
-    }
+        return blocksArray;
+        // Uncomment this to return shuffled blocks instead
+        //return this.shuffleBlocks(blocksArray);
+    };
     Board.prototype.shuffleBlocks = function (blocksArray) {
         var _a;
         var currentIndex = blocksArray.length, randomIndex;
@@ -228,97 +465,35 @@ var Board = /** @class */ (function () {
         return blocksArray;
     };
     Board.prototype.draw = function () {
-        var _this = this;
         for (var i = 0; i < this.blocks.length; i++) {
-            var row = document.createElement("div");
-            row.classList.add("row");
-            var _loop_1 = function (j) {
-                // TODO here we need to create a element creator class
-                // to create the will be appended and set in the block
-                //const div = document.createElement("div");
-                var block = this_1.blocks[i][j];
-                var attributes = block.getAttributes();
-                var div = new ElementCreator("div", attributes.width.toString(), attributes.height.toString(), undefined, { backgroundColor: "black" }, // Style property
-                "block").createElement();
-                //div.style.width = attributes.width.toString().concat("px");
-                //div.style.height = attributes.height.toString().concat("px");
-                //div.classList.add("block");
-                //div.style.backgroundColor = "black";
-                block.setElement(div);
-                var openBlockFunction = function () { return _this.open(block); };
-                div.addEventListener("click", openBlockFunction);
-                block.setOpenFunction(openBlockFunction);
-                row === null || row === void 0 ? void 0 : row.appendChild(div);
-            };
-            var this_1 = this;
+            var row = ImprovedElementCreator.createElement(ElementType.DIV, "row");
             for (var j = 0; j < this.blocks.length; j++) {
-                _loop_1(j);
+                var block = this.blocks[i][j].getDivElementRef();
+                row === null || row === void 0 ? void 0 : row.appendChild(block);
             }
             this.container.appendChild(row);
         }
     };
-    Board.prototype.open = function (block) {
+    Board.prototype.startGame = function () {
         var _this = this;
-        if (this.openedBlocks.length === 2) {
-            return;
-        }
-        // TODO Here we can create the image using the elementCreator again
-        var attributes = block.getAttributes();
-        var img = new ElementCreator("img", attributes.width.toString(), attributes.height.toString(), "images/".concat(attributes.image)).createElement();
-        block.setElement(img);
-        var div = block.getElement("DIV");
-        var animationEndCallback = function () {
-            div.appendChild(img);
-            div.classList.remove("flip");
-            div.removeEventListener("animationend", animationEndCallback);
-        };
-        div.classList.add("flip");
-        div.addEventListener("animationend", animationEndCallback);
-        this.openedBlocks.push(block);
-        if (this.openedBlocks.length === 2) {
-            var match_1 = this.openedBlocks[0].getAttributes().image ===
-                this.openedBlocks[1].getAttributes().image;
-            setTimeout(function () {
-                _this.handleOpenPair(match_1);
-            }, 2000);
-        }
-    };
-    Board.prototype.handleOpenPair = function (match) {
-        var _this = this;
-        this.openedBlocks.forEach(function (block) {
-            var _a;
-            if (match) {
-                /* Uncomment these lines to remove the 2 matching divs */
-                /* let element = block.getElement("DIV");
-                block.deleteElement(block.getElement("IMG")!);
-                if (element) {
-                  element.style.backgroundColor = "white";
-                } */
-                _this.remainingBlocks--;
-                (_a = block
-                    .getElement("DIV")) === null || _a === void 0 ? void 0 : _a.removeEventListener("click", block.getOpenFunction());
-            }
-            else {
-                block.deleteElement(block.getElement("IMG"));
-            }
-            _this.openedBlocks = [];
+        this.isGameActive = true;
+        var quitButtons = document.querySelectorAll(".quit-game");
+        quitButtons.forEach(function (button) {
+            button.addEventListener("click", function () { return _this.gameOver("quit"); });
         });
-        console.log(this.remainingBlocks);
-        if (this.remainingBlocks == 0) {
-            this.gameOver(true);
-        }
-    };
-    Board.prototype.gameOver = function (victory) {
-        var gameoverMessage = document.getElementById("gameoverMessage");
-        var animation = new Animation(gameoverMessage);
-        if (victory) {
-            animation.showConfetti();
-        }
-        else {
-            console.log("You Lost");
-        }
+        this.draw();
+        this.timer.startTimer(this.settings.gameLength);
+        document.addEventListener("DOMContentLoaded", function () {
+            if (localStorage.getItem("playStartSound") === "true") {
+                start_js_1.SoundPlayer.playSound("START");
+                localStorage.removeItem("playStartSound");
+            }
+            start_js_1.SoundPlayer.playSound("GAME_MUSIC", -1);
+        });
     };
     return Board;
 }());
-var gameBoard = new Board(4);
-gameBoard.draw();
+var urlParams = new URLSearchParams(window.location.search);
+var gameMode = urlParams.get("gameMode");
+var gameBoard = new Board(DifficultySettings[gameMode]);
+gameBoard.startGame();
