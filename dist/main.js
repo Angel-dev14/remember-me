@@ -269,11 +269,6 @@ class GameUI {
     updatePercentage(percentage) {
         this.accuracyPercentage.textContent = `${percentage.toString()}%`;
     }
-    changeBackground(blockArray) {
-        blockArray.forEach((block) => {
-            block.getDivElementRef().classList.toggle("showOnlyNumbers");
-        });
-    }
 }
 class Board {
     constructor(settings) {

@@ -63,10 +63,8 @@ customElements.define("custom-header", Header);
 customElements.define("custom-footer", Footer);
 class Game {
     constructor() {
-        this.gameModes = [];
         Object.values(Difficulty).forEach((diff) => {
             const gameMode = GameModeFactory.create(diff);
-            this.gameModes.push(gameMode);
         });
         this.quitBtn = new Quit();
     }
@@ -195,5 +193,5 @@ SoundPlayer.musicAudio = null;
         audio.load();
     });
 })();
-const game = new Game();
+new Game();
 //# sourceMappingURL=start.js.map
