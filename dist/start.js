@@ -8,20 +8,23 @@ export const Header = class Header extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
     <div class="header">
-    <div class="spacer"></div>
-    <div class="logo-title">
-    <a class='logo'>
+    <div class="header-buttons">
+    <div class="logo-button"">
+        <a class='logo'>
            <img onclick="!window.location.href.endsWith('/remember-me/') && window.history.back()" 
            class='logo' src="./images/logo/logo.png" alt="header logo" width="50px" heigth="auto">
-          </a>
+        </a>
+       </div>
+    </div>
+    <div class="logo-title">
       <div class="title">
         <p>Remember Me</p>
       </div>
-          </div>
-          <div class="header-buttons">
-          <button id="musicButton" class="header-button deactivatedMusic" title="Toggle Music"></button>
-          <button id="soundButton" class="header-button activeSounds" title="Toggle Game Sounds"></button>
-          </div>
+      </div>
+      <div class="header-buttons">
+              <button id="musicButton" class="header-button deactivatedMusic" title="Toggle Music"></button>
+              <button id="soundButton" class="header-button activeSounds" title="Toggle Game Sounds"></button>
+      </div>
     </div>
       `;
         this.setupEventListeners();

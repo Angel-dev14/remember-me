@@ -43,9 +43,12 @@
   .footer a {
     color: white;
   }
-  
 
-  .header > *, .header a, .footer > *, .header a {
+  .logo-button {
+    width: 100%;
+  }
+
+  .header > *, .header a, .footer > *, .footer a {
     font-family: "Sedgwick Ave Display", cursive;
     color: white;
     padding: 5px 0;
@@ -64,10 +67,7 @@
   }
   
   /* Layout styles */
-  .spacer, .logo-title, .header-buttons {
-    flex: 1;
-  }
-  
+
   .logo-title, .header-buttons, .row, .column, .row-bottom {
     display: flex;
     align-items: center;
@@ -76,7 +76,7 @@
   }
 
   .header-buttons {
-    justify-content: end;
+    margin: 0 10px;
   }
 
   .row-bottom {
@@ -277,43 +277,7 @@
       flex-direction: row;
     }
   }
-  
-  @media screen and (max-width: 980px) {
-    .row {
-      gap: 0.8em !important;
-      flex-wrap: wrap;
-    }
-    .block *, .block {
-      width: 75px !important;
-      height: 75px !important;
-    }
-    .block {
-      margin: 0.4em !important;
-    }
-    .header-button, .reset-btn {
-      width: 35px !important;
-      height: 35px !important;
-    }
-    .title {
-      font-size: 2em !important;
-    }
-    .logo {
-      width: 35px !important;
-    }
-  }
-  
-  @media screen and (max-width: 450px) {
-    .row {
-      gap: 0.3em !important;
-    }
-    .block *, .block {
-      width: 55px !important;
-      height: 55px !important;
-    }
-    .block {
-      margin: 0.25em !important;
-    }
-  }
+
   
   /* Game over message and timer styles */
   #gameoverMessage {
@@ -330,8 +294,9 @@
   
   /* Start game and menu styles */
   .start-game {
-    position: relative;
-    top: 2.5em;
+    /*position: relative;*/
+    /*top: 2.5em;*/
+    padding: 10px 0;
     width: 80%;
     text-align: center;
     margin: 0 auto;
@@ -360,12 +325,13 @@
   }
   
   .options {
-    margin-top: 2em;
+    margin: 2em auto;
+    width: 50%;
     position: relative;
   }
   
   .option {
-    width: 66%;
+    width: 100%;
     text-transform: uppercase;
     padding: 1em 0;
     text-align: center;
@@ -392,7 +358,7 @@
   .quit {
     display: block;
     background-color: var(--orange);
-    margin-top: 3em;
+    /*margin-top: 3em;*/
   }
   
   /* Quit game and marker styles */
@@ -428,5 +394,50 @@
   .gameover-x-mark:hover {
     background-color: var(--yellowish-orange);
   }
-    
-  
+
+
+@media screen and (max-width: 980px) {
+
+  .header-buttons {
+    width: 100px;
+  }
+
+  .options {
+    width: 100%;
+  }
+
+  .row {
+    gap: 0.8em !important;
+    flex-wrap: wrap;
+  }
+  .block *, .block {
+    width: 75px !important;
+    height: 75px !important;
+  }
+  .block {
+    margin: 0.4em !important;
+  }
+  .header-button, .reset-btn {
+    width: 35px !important;
+    height: 35px !important;
+  }
+  .title {
+    font-size: 1.5em !important;
+  }
+  .logo {
+    width: 35px !important;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .row {
+    gap: 0.3em !important;
+  }
+  .block *, .block {
+    width: 55px !important;
+    height: 55px !important;
+  }
+  .block {
+    margin: 0.25em !important;
+  }
+}
